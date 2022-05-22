@@ -1,0 +1,13 @@
+{
+  "name": "map_app",
+  "dockerComposeFile": "./docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "settings": {
+    "terminal.integrated.profiles": {
+      "path": "/bin/bash",
+      "overrideName": true
+    }
+  },
+  "extensions": ["ms-python.python"]
+}

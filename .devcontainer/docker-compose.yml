@@ -1,0 +1,31 @@
+version: "3"
+services:
+  # Service names
+  app:
+    # Dockerfile location
+    container_name: "map_app_api"
+    build:
+      context: ..
+      dockerfile: ./.devcontainer/images/python/Dockerfile
+    restart: always
+    tty: true
+    env_file:
+      # Ensure that the variables in .env match the same variables in devcontainer.json
+      - .env
+    volumes:
+      - ..:/workspace
+    # default command so things don't shut down after the process ends.
+    ports:
+      - 8000:8000
+  mysql:
+    container_name: "map_app_db"
+    build:
+      context: ./images/mysql
+      dockerfile: ./Dockerfile
+    # M1マック向けのplatform設定
+    platform: linux/x86_64
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - 3306:3306
