@@ -1,2 +1,6 @@
 fastapi
 uvicorn[standard]
+sqlalchemy
+mysqlclient
+autopep8
+flake8
