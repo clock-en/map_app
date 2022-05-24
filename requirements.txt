@@ -5,3 +5,4 @@ mysqlclient
 autopep8
 flake8
 pydantic[email]
+passlib[bcrypt]
