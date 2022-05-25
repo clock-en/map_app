@@ -6,3 +6,5 @@ autopep8
 flake8
 pydantic[email]
 passlib[bcrypt]
+python-multipart
+python-jose[cryptography]

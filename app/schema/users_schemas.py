@@ -20,3 +20,7 @@ class User(UserBase):
 
     class Config:
         orm_mode = True
+
+
+class UserInDB(User):
+    password: str

@@ -1,13 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.core.router import users
-from app.core.orm.database import engine
-from app.core.orm import models
+from app.model import users_model
+from app.router import users_router, auth_router
+from app.database import engine
 
-models.Base.metadata.create_all(bind=engine)
+users_model.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-
 
 # TODO: developと本番を分けられるようにする
 origins = ['http://localhost:3000']
@@ -17,11 +16,12 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=['*'],
+    allow_headers=['*'],
 )
 
-app.include_router(users.router)
+app.include_router(users_router.router)
+app.include_router(auth_router.router)
 
 """
 if __name__ == '__main__':
