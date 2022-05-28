@@ -9,8 +9,9 @@ router = APIRouter(prefix='/api/auth', tags=['auth'])
 
 @router.post('/login')
 async def login(
-        form_data: OAuth2PasswordRequestForm = Depends(),
-        db: Session = Depends(get_db)):
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_db)
+):
     db_user = auth.authenticate_user(
         db, form_data.username, form_data.password)
     if db_user is None:
