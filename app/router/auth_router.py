@@ -1,6 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+import os
+from fastapi import APIRouter, Depends, Response, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+from datetime import datetime
 from app.database import get_db
 from app.utility import auth
 
@@ -9,6 +11,7 @@ router = APIRouter(prefix='/api/auth', tags=['auth'])
 
 @router.post('/login')
 async def login(
+    response: Response,
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)
 ):
@@ -22,6 +25,18 @@ async def login(
         )
     access_token_expires = auth.create_access_token_expires()
     access_token = auth.create_access_token(
-        data={'sub': db_user.email}, expires_delta=access_token_expires
+        data={'sub': str(db_user.id)}
     )
-    return {'access_token': access_token, 'token_type': 'bearer'}
+    expires = datetime.utcnow() + access_token_expires
+
+    response.set_cookie(
+        key='access_token',
+        value=f'Bearer {access_token}',
+        httponly=True,
+        secure=False if os.environ['APP_ENV'] == 'DEV' else True,
+        samesite='lax',
+        expires=expires.strftime("%a, %d %b %Y %H:%M:%S GMT"),
+    )
+    # リクエスト時のカスタムヘッダー用にユーザーごとに固定となるトークンを発行する
+    identified_token = auth.create_identified_token(db_user.id)
+    return {'token': identified_token}

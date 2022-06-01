@@ -1,20 +1,23 @@
 import os
-from typing import Union
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
+import hashlib
+from typing import Union, Optional
+from fastapi import Depends, Header, HTTPException, status
 from passlib.context import CryptContext
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from app.crud import users_crud
 from app.database import get_db
-from app.schema import token_schema
+from app.schema import auth_schema
+from starlette.requests import Request
 
 SECRET_KEY = os.environ['SECRET_KEY']
 ALGORITHM = 'HS256'
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='api/auth/login')
+
+oauth2_scheme = auth_schema.OAuth2PasswordBearerWithCookie(
+    tokenUrl='api/auth/login')
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
 
@@ -36,38 +39,72 @@ def authenticate_user(
     return db_user
 
 
-async def get_current_user(
-        token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    credentials_exception = HTTPException(
+def create_credentials_exception():
+    return HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail='Could not validate credentials',
         headers={'WWW-Authenticate': 'Bearer'},
     )
+
+
+async def get_current_user(
+        token: str = Depends(oauth2_scheme),
+        db: Session = Depends(get_db)
+):
+    credentials_exception = create_credentials_exception()
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get('sub')
-        if username is None:
+        user_id: int = int(payload.get('sub'))
+        if user_id is None:
             raise credentials_exception
-        token_data = token_schema.TokenData(username=username)
+        token_data = auth_schema.TokenData(id=user_id)
     except JWTError:
         raise credentials_exception
-    user = users_crud.get_user_by_email(db, email=token_data.username)
+    user = users_crud.get_user_by_id(db, id=token_data.id)
     if user is None:
         raise credentials_exception
     return user
 
 
+def authenticate_with_x_token(
+        user: str = Depends(get_current_user),
+        x_token: Optional[str] = Header(Defalt=None)
+):
+    credentials_exception = create_credentials_exception()
+    if x_token is None:
+        raise credentials_exception
+    identified_token = create_identified_token(user.id)
+    if x_token != identified_token:
+        raise credentials_exception
+
+
 def create_access_token(
-        data: dict, expires_delta: Union[timedelta, None] = None):
+        data: dict,
+        expires_delta: Union[timedelta, None] = None
+):
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
-    else:
-        expire = datetime.utcnow() + timedelta(minutes=15)
-    to_encode.update({'exp': expire})
+        to_encode.update({'exp': expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
 
 def create_access_token_expires():
     return timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+
+
+def create_identified_token(user_id: int):
+    # リクエスト時のカスタムヘッダー用にユーザーごとに固定となるトークンを発行する
+    identified_string = os.environ['TOKEN_SALT'] + str(user_id)
+    return hashlib.sha512(identified_string.encode("utf-8")).hexdigest()
+
+
+def validate_content_type(request: Request):
+    content_type = request.headers.get("content-type", None)
+    if content_type != "application/json":
+        raise HTTPException(
+            status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            f"Unsupported media type: {content_type}."
+            " It must be application/json",
+        )
