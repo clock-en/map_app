@@ -12,7 +12,7 @@ class UserCreate(UserBase):
             r'\A(?=.*?[a-z])(?=.*?\d)(?=.*?[!-/:-@[-`{-~])[!-~]{8,100}\Z(?i)'),
         min_length=8,
         max_length=20,
-        example='test1234')
+        example='test-1234')
 
 
 class User(UserBase):
@@ -20,7 +20,3 @@ class User(UserBase):
 
     class Config:
         orm_mode = True
-
-
-class UserInDB(User):
-    password: str
