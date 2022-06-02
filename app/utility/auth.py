@@ -1,7 +1,7 @@
 import os
 import hashlib
-from typing import Union, Optional
-from fastapi import Depends, Header, HTTPException, status
+from typing import Union
+from fastapi import Depends, Response, Header, HTTPException, status
 from passlib.context import CryptContext
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
@@ -30,7 +30,10 @@ def get_password_hash(password: str):
 
 
 def authenticate_user(
-        db: Session, email: str, password: str,):
+    db: Session,
+    email: str,
+    password: str
+):
     db_user = users_crud.get_user_by_email(db, email)
     if not db_user:
         return None
@@ -47,9 +50,10 @@ def create_credentials_exception():
     )
 
 
-async def get_current_user(
-        token: str = Depends(oauth2_scheme),
-        db: Session = Depends(get_db)
+async def authorize_user(
+    response: Response,
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db)
 ):
     credentials_exception = create_credentials_exception()
     try:
@@ -63,12 +67,17 @@ async def get_current_user(
     user = users_crud.get_user_by_id(db, id=token_data.id)
     if user is None:
         raise credentials_exception
+    expires = create_access_token_expires()
+    access_token = create_access_token(user.id, expires)
+    set_access_token_cookie(response, access_token, expires)
+
     return user
 
 
-def authenticate_with_x_token(
-        user: str = Depends(get_current_user),
-        x_token: Optional[str] = Header(Defalt=None)
+def authorize_with_x_token(
+    response: Response,
+    user: str = Depends(authorize_user),
+    x_token: Union[str, None] = Header(Defalt=None)
 ):
     credentials_exception = create_credentials_exception()
     if x_token is None:
@@ -76,22 +85,17 @@ def authenticate_with_x_token(
     identified_token = create_identified_token(user.id)
     if x_token != identified_token:
         raise credentials_exception
+    return user
 
 
-def create_access_token(
-        data: dict,
-        expires_delta: Union[timedelta, None] = None
-):
-    to_encode = data.copy()
-    if expires_delta:
-        expire = datetime.utcnow() + expires_delta
-        to_encode.update({'exp': expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+def create_access_token(id: int, expires: str):
+    data = {'sub': str(id), 'exp': expires}
+    encoded_jwt = jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
 
 def create_access_token_expires():
-    return timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    return datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 
 
 def create_identified_token(user_id: int):
@@ -108,3 +112,18 @@ def validate_content_type(request: Request):
             f"Unsupported media type: {content_type}."
             " It must be application/json",
         )
+
+
+def set_access_token_cookie(
+    response: Response,
+    access_token: str,
+    expires: str
+):
+    response.set_cookie(
+        key='access_token',
+        value=f'Bearer {access_token}',
+        httponly=True,
+        secure=False if os.environ['APP_ENV'] == 'DEV' else True,
+        samesite='lax',
+        expires=expires.strftime("%a, %d %b %Y %H:%M:%S GMT"),
+    )

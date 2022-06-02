@@ -21,12 +21,12 @@ router = APIRouter(prefix='/api/users', tags=['users'])
     response_model=users_schema.User,
     status_code=status.HTTP_201_CREATED,
     dependencies=[Depends(auth.validate_content_type),
-                  Depends(auth.authenticate_with_x_token)]
+                  Depends(auth.authorize_with_x_token)]
 )
 async def create_user(
     user: users_schema.UserCreate = Body(embed=False),
     db: Session = Depends(get_db),
-    _: str = Depends(auth.get_current_user),
+    _: str = Depends(auth.authorize_user),
 ):
     db_user = users_crud.get_user_by_email(db, email=user.email)
     if db_user:
@@ -47,7 +47,7 @@ async def create_user(
     status_code=status.HTTP_200_OK,
 )
 async def read_users_me(
-    current_user: users_schema.User = Depends(auth.get_current_user)
+    current_user: users_schema.User = Depends(auth.authorize_user)
 ):
     return current_user
 
@@ -56,7 +56,7 @@ async def read_users_me(
     '/{user_id}',
     response_model=users_schema.User,
     status_code=status.HTTP_200_OK,
-    dependencies=[Depends(auth.get_current_user)]
+    dependencies=[Depends(auth.authorize_user)]
 )
 async def read_user(
     user_id: int = Path(ge=1),
@@ -73,7 +73,7 @@ async def read_user(
     response_model=users_schema.User,
     status_code=status.HTTP_201_CREATED,
     dependencies=[Depends(auth.validate_content_type),
-                  Depends(auth.get_current_user)]
+                  Depends(auth.authorize_user)]
 )
 async def test_create_user(
     user: users_schema.UserCreate,
