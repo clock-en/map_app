@@ -1,8 +1,6 @@
-import os
 from fastapi import APIRouter, Depends, Response, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from datetime import datetime
 from app.database import get_db
 from app.utility import auth
 
@@ -23,20 +21,17 @@ async def login(
             detail='Incorrect username or password',
             headers={'WWW-Authenticate': 'Bearer'}
         )
-    access_token_expires = auth.create_access_token_expires()
-    access_token = auth.create_access_token(
-        data={'sub': str(db_user.id)}
-    )
-    expires = datetime.utcnow() + access_token_expires
 
-    response.set_cookie(
-        key='access_token',
-        value=f'Bearer {access_token}',
-        httponly=True,
-        secure=False if os.environ['APP_ENV'] == 'DEV' else True,
-        samesite='lax',
-        expires=expires.strftime("%a, %d %b %Y %H:%M:%S GMT"),
-    )
+    expires = auth.create_access_token_expires()
+    access_token = auth.create_access_token(db_user.id, expires)
+    auth.set_access_token_cookie(response, access_token, expires)
+
     # リクエスト時のカスタムヘッダー用にユーザーごとに固定となるトークンを発行する
     identified_token = auth.create_identified_token(db_user.id)
     return {'token': identified_token}
+
+
+@router.post('/logout')
+async def logout(response: Response):
+    response.delete_cookie('access_token')
+    return {'isLoggedOut': True}
