@@ -6,13 +6,11 @@ from fastapi import (
     HTTPException,
     status)
 from sqlalchemy.orm import Session
-from app.schema import users_schema, auth_schema
+from app.schema import users_schema
 from app.database import get_db
 from app.crud import users_crud
 from app.utility import auth
 
-oauth2_scheme = auth_schema.OAuth2PasswordBearerWithCookie(
-    tokenUrl='api/auth/login')
 router = APIRouter(prefix='/api/users', tags=['users'])
 
 
