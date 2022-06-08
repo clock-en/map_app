@@ -75,7 +75,6 @@ async def authorize_user(
 
 
 def authorize_with_x_token(
-    response: Response,
     user: str = Depends(authorize_user),
     x_token: Union[str, None] = Header(Defalt=None)
 ):
