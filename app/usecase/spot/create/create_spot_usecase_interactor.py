@@ -24,7 +24,7 @@ class CreateSpotUsecaseInteractor(object):
             longitude=self.__input.longitude
         )
         if db_spot:
-            if db_spot.name == self.__input.name.value:
+            if db_spot.name.value == self.__input.name.value:
                 return CreateSpotUsecaseOutput(
                     is_success=False,
                     error=UnprocessableEntityError(

@@ -1,16 +1,34 @@
+from typing import List
 from fastapi import APIRouter, Body, Depends, HTTPException, status
 from app.schema import spots_schema
 from app.adapter.presenter.spots.spots_create_presenter import (
     SpotsCreatePresenter)
+from app.adapter.presenter.spots.spots_index_presenter import (
+    SpotsIndexPresenter)
 from app.usecase.spot.create.create_spot_usecase_input import (
     CreateSpotUsecaseInput)
 from app.usecase.spot.create.create_spot_usecase_interactor import (
     CreateSpotUsecaseInteractor)
+from app.usecase.spot.fetch_all.fetch_all_spots_usecase_interactor import (
+    FetchAllSpotsUsecaseInteractor)
 from app.domain.value_object.error.unprocessable_entity_error import (
     UnprocessableEntityError)
 from app.utility import auth
 
 router = APIRouter(prefix='/api/spots', tags=['spots'])
+
+
+@router.get(
+    '',
+    response_model=List[spots_schema.Spot],
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(auth.authorize_user)]
+)
+async def fetch_spots():
+    usecase = FetchAllSpotsUsecaseInteractor()
+    presenter = SpotsIndexPresenter(usecase.handle())
+    viewModel = presenter.api()
+    return viewModel['spots']
 
 
 @router.post(
@@ -44,19 +62,8 @@ async def create_spot(
                 }])
     return viewModel['spot']
 
+
 """
-@router.get(
-    '',
-    response_model=List[spots_schema.Spot],
-    status_code=status.HTTP_201_CREATED,
-    dependencies=[Depends(auth.authorize_user)]
-)
-async def fetch_spots(
-    db: Session = Depends(get_db),
-):
-    return spots_crud.get_spots(db=db)
-
-
 @router.get(
     '/{spot_id}',
     response_model=spots_schema.Spot,

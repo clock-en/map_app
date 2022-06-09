@@ -16,5 +16,4 @@ class SpotName():
         object.__setattr__(self, 'value', value)
 
     def __is_invalid_length(self, value: str) -> bool:
-        print(value)
         return len(value) > self.MAX_LENGTH
