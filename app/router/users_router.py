@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Body, Path, Depends, HTTPException, status
-from app.schema import users_schema
+from app.core.sqlalchemy.schema import users_schema
 from app.usecase.user import (
     CreateUserUsecaseInput,
     CreateUserUsecaseInteractor,

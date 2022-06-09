@@ -2,7 +2,7 @@ from sqlalchemy import or_, and_
 from sqlalchemy.orm import Session
 
 from app.model import spots_model
-from app.schema import spots_schema
+from app.core.sqlalchemy.schema import spots_schema
 
 
 def set_spot_condition(lat: float, lng: float):

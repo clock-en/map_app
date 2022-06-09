@@ -1,6 +1,6 @@
 from typing import List
 from fastapi import APIRouter, Body, Path, Depends, HTTPException, status
-from app.schema import spots_schema
+from app.core.sqlalchemy.schema import spots_schema
 from app.adapter.presenter.spots import (
     SpotsCreatePresenter,
     SpotsIndexPresenter,
