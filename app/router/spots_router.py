@@ -1,12 +1,37 @@
 from typing import List
 from fastapi import APIRouter, Body, Path, Depends, HTTPException, status
-from sqlalchemy.orm import Session
-from app.schema import spots_schema
-from app.crud import spots_crud
-from app.database import get_db
+from app.core.sqlalchemy.schema import spots_schema
+from app.adapter.presenter.spots import (
+    SpotsCreatePresenter,
+    SpotsIndexPresenter,
+    SpotsIdPresenter
+)
+from app.usecase.spot import (
+    CreateSpotUsecaseInput,
+    CreateSpotUsecaseInteractor,
+    FetchSpotsUsecaseInteractor,
+    FetchSpotUsecaseInput,
+    FetchSpotUsecaseInteractor
+)
+from app.domain.value_object.error.unprocessable_entity_error import (
+    UnprocessableEntityError)
+from app.domain.value_object.error.notfound_error import NotFoundError
 from app.utility import auth
 
 router = APIRouter(prefix='/api/spots', tags=['spots'])
+
+
+@router.get(
+    '',
+    response_model=List[spots_schema.Spot],
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(auth.authorize_user)]
+)
+async def get_spots():
+    usecase = FetchSpotsUsecaseInteractor()
+    presenter = SpotsIndexPresenter(usecase.handle())
+    viewModel = presenter.api()
+    return viewModel['spots']
 
 
 @router.post(
@@ -18,52 +43,44 @@ router = APIRouter(prefix='/api/spots', tags=['spots'])
 )
 async def create_spot(
     spot: spots_schema.SpotCreate = Body(embed=False),
-    db: Session = Depends(get_db),
 ):
-    db_spot = spots_crud.get_registered_spot(
-        db, spot.name, spot.latitude, spot.longitude)
-    if db_spot:
-        if db_spot.name == spot.name:
+    input = CreateSpotUsecaseInput(
+        name=spot.name,
+        latitude=spot.latitude,
+        longitude=spot.longitude,
+        user_id=spot.user_id
+    )
+    usecase = CreateSpotUsecaseInteractor(input)
+    presenter = SpotsCreatePresenter(usecase.handle())
+    viewModel = presenter.api()
+
+    if not viewModel['is_success']:
+        if viewModel['error'].type == UnprocessableEntityError.TYPE_CODE:
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail=[{
-                    'loc': ['body', 'name'],
-                    'msg': 'Name already registered',
-                    'type': 'value_error.name'
+                    'loc': ['body', viewModel['error'].field],
+                    'msg': viewModel['error'].message,
+                    'type': 'value_error.' + viewModel['error'].field
                 }])
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=[{
-                'loc': ['body', 'location'],
-                'msg': 'Location already registered',
-                'type': 'value_error.location'
-            }])
-    return spots_crud.create_spot(db=db, spot=spot)
+    return viewModel['spot']
 
 
 @router.get(
-    '',
-    response_model=List[spots_schema.Spot],
-    status_code=status.HTTP_201_CREATED,
-    dependencies=[Depends(auth.authorize_user)]
-)
-async def fetch_spots(
-    db: Session = Depends(get_db),
-):
-    return spots_crud.get_spots(db=db)
-
-
-@router.get(
-    '/{spot_id}',
+    '/{id}',
     response_model=spots_schema.Spot,
     status_code=status.HTTP_200_OK,
     dependencies=[Depends(auth.authorize_user)]
 )
-async def read_user(
-    spot_id: int = Path(ge=1),
-    db: Session = Depends(get_db),
+async def get_spot(
+    id: int = Path(ge=1),
 ):
-    db_spot = spots_crud.get_spot_by_id(db, id=spot_id)
-    if db_spot is None:
-        raise HTTPException(status_code=404, detail='Spot not found')
-    return db_spot
+    input = FetchSpotUsecaseInput(id)
+    usecase = FetchSpotUsecaseInteractor(input)
+    presenter = SpotsIdPresenter(usecase.handle())
+    viewModel = presenter.api()
+    if not viewModel['is_success']:
+        if viewModel['error'].type == NotFoundError.TYPE_CODE:
+            raise HTTPException(
+                status_code=404, detail=viewModel['error'].message)
+    return viewModel['spot']

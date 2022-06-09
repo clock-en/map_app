@@ -1,10 +1,11 @@
 from sqlalchemy import Column, String, Float, ForeignKey
 from sqlalchemy.dialects.mysql import INTEGER as Integer
-from app.database import Base
+from app.core.sqlalchemy.database import Base
 
 
-class Spot(Base):
+class SpotDataModel(Base):
     __tablename__ = 'spots'
+    __table_args__ = {'extend_existing': True}
 
     id = Column('id', Integer(unsigned=True), primary_key=True, index=True)
     name = Column('name', String, unique=True, index=True)

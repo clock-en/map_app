@@ -1,7 +1,10 @@
 from fastapi import APIRouter, Depends, Response, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from app.database import get_db
+from app.usecase.auth import LoginUsecaseInput, LoginUsecaseInteractor
+from app.adapter.presenter.auth import LoginPresenter
+from app.core.sqlalchemy.database import get_db
+from app.domain.value_object.error.unauthorized_error import UnauthorizedError
 from app.utility import auth
 
 router = APIRouter(prefix='/api/auth', tags=['auth'])
@@ -13,22 +16,25 @@ async def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)
 ):
-    db_user = auth.authenticate_user(
-        db, form_data.username, form_data.password)
-    if db_user is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail='Incorrect username or password',
-            headers={'WWW-Authenticate': 'Bearer'}
-        )
+    input = LoginUsecaseInput(
+        email=form_data.username,
+        password=form_data.password
+    )
+    usecase = LoginUsecaseInteractor(input)
+    presenter = LoginPresenter(usecase.handle())
+    viewModel = presenter.api()
 
-    expires = auth.create_access_token_expires()
-    access_token = auth.create_access_token(db_user.id, expires)
-    auth.set_access_token_cookie(response, access_token, expires)
+    if not viewModel['is_success']:
+        if viewModel['error'].type == UnauthorizedError.TYPE_CODE:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=viewModel['error'].message,
+                headers={'WWW-Authenticate': 'Bearer'}
+            )
 
-    # リクエスト時のカスタムヘッダー用にユーザーごとに固定となるトークンを発行する
-    identified_token = auth.create_identified_token(db_user.id)
-    return {'token': identified_token}
+    auth.set_access_token_cookie(
+        response, viewModel['access_token'], viewModel['expires'])
+    return {'token': viewModel['identified_token']}
 
 
 @router.post('/logout')
