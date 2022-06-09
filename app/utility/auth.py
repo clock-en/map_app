@@ -5,9 +5,9 @@ from fastapi import Depends, Response, Header, HTTPException, status
 from passlib.context import CryptContext
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
-from sqlalchemy.orm import Session
-from app.crud import users_crud
-from app.core.sqlalchemy.database import get_db
+from app.adapter.query_service.user_query_service import UserQueryService
+from app.domain.value_object.id import Id
+from app.core.sqlalchemy.data_model.user_data_model import UserDataModel
 from app.core.sqlalchemy.schema import auth_schema
 from starlette.requests import Request
 
@@ -21,27 +21,6 @@ oauth2_scheme = auth_schema.OAuth2PasswordBearerWithCookie(
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
 
-def verify_password(plain_password: str, hashed_password: str):
-    return pwd_context.verify(plain_password, hashed_password)
-
-
-def get_password_hash(password: str):
-    return pwd_context.hash(password)
-
-
-def authenticate_user(
-    db: Session,
-    email: str,
-    password: str
-):
-    db_user = users_crud.get_user_by_email(db, email)
-    if not db_user:
-        return None
-    if not verify_password(password, db_user.password):
-        return None
-    return db_user
-
-
 def create_credentials_exception():
     return HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -52,8 +31,7 @@ def create_credentials_exception():
 
 async def authorize_user(
     response: Response,
-    token: str = Depends(oauth2_scheme),
-    db: Session = Depends(get_db)
+    token: str = Depends(oauth2_scheme)
 ):
     credentials_exception = create_credentials_exception()
     try:
@@ -64,14 +42,25 @@ async def authorize_user(
         token_data = auth_schema.TokenData(id=user_id)
     except JWTError:
         raise credentials_exception
-    user = users_crud.get_user_by_id(db, id=token_data.id)
+
+    # ユーザーの検索
+    query_service = UserQueryService()
+    id = Id(int(token_data.id))
+    user = query_service.fetch_user_by_id(id)
     if user is None:
         raise credentials_exception
+
+    # トークンを再発行
     expires = create_access_token_expires()
-    access_token = create_access_token(user.id, expires)
+    access_token = create_access_token(user.id.value, expires)
     set_access_token_cookie(response, access_token, expires)
 
-    return user
+    return UserDataModel(
+        id=user.id.value,
+        name=user.name.value,
+        email=user.email.value,
+        password=user.password
+    )
 
 
 def authorize_with_x_token(
