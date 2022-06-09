@@ -1,22 +1,18 @@
 from typing import List
 from fastapi import APIRouter, Body, Path, Depends, HTTPException, status
 from app.schema import spots_schema
-from app.adapter.presenter.spots.spots_create_presenter import (
-    SpotsCreatePresenter)
-from app.adapter.presenter.spots.spots_index_presenter import (
-    SpotsIndexPresenter)
-from app.adapter.presenter.spots.spots_id_presenter import (
-    SpotsIdPresenter)
-from app.usecase.spot.create.create_spot_usecase_input import (
-    CreateSpotUsecaseInput)
-from app.usecase.spot.create.create_spot_usecase_interactor import (
-    CreateSpotUsecaseInteractor)
-from app.usecase.spot.fetch_spots.fetch_spots_usecase_interactor import (
-    FetchSpotsUsecaseInteractor)
-from app.usecase.spot.fetch_spot.fetch_spot_usecase_input import (
-    FetchSpotUsecaseInput)
-from app.usecase.spot.fetch_spot.fetch_spot_usecase_interactor import (
-    FetchSpotUsecaseInteractor)
+from app.adapter.presenter.spots import (
+    SpotsCreatePresenter,
+    SpotsIndexPresenter,
+    SpotsIdPresenter
+)
+from app.usecase.spot import (
+    CreateSpotUsecaseInput,
+    CreateSpotUsecaseInteractor,
+    FetchSpotsUsecaseInteractor,
+    FetchSpotUsecaseInput,
+    FetchSpotUsecaseInteractor
+)
 from app.domain.value_object.error.unprocessable_entity_error import (
     UnprocessableEntityError)
 from app.domain.value_object.error.notfound_error import NotFoundError
