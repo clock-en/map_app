@@ -6,7 +6,7 @@ from app.domain.value_object.error.unprocessable_entity_error import (
 
 
 @dataclass(init=False, eq=True, frozen=True)
-class FetchAllSpotsUsecaseOutput(object):
+class FetchSpotsUsecaseOutput(object):
     is_success: bool
     spots: Union[List[Spot], None]
     error: Union[UnprocessableEntityError, None]

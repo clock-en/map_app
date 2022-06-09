@@ -17,7 +17,7 @@ class SpotQueryService(object):
     def fetch_all_spots(self) -> Union[Spot, None]:
         return self.__create_spot_list(self.__spot_dao.get_all_spots())
 
-    def find_by_id(self, id: Id) -> Union[Spot, None]:
+    def fetch_spot_by_id(self, id: Id) -> Union[Spot, None]:
         return self.__create_spot_entity(self.__spot_dao.get_spot_by_id(id))
 
     def fetch_registered_spot(
@@ -33,7 +33,12 @@ class SpotQueryService(object):
     def __create_spot_list(self, db_spots: List[SpotDataModel]) -> List[Spot]:
         return list(map(self.__create_spot_entity, db_spots))
 
-    def __create_spot_entity(self, db_spot: SpotDataModel) -> Spot:
+    def __create_spot_entity(
+        self,
+        db_spot: Union[SpotDataModel, None]
+    ) -> Union[Spot, None]:
+        if db_spot is None:
+            return None
         return Spot(
             id=Id(db_spot.id),
             name=SpotName(db_spot.name),
