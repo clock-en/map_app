@@ -7,7 +7,7 @@ from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from app.crud import users_crud
-from app.database import get_db
+from app.core.sqlalchemy.database import get_db
 from app.schema import auth_schema
 from starlette.requests import Request
 

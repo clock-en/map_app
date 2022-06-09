@@ -7,7 +7,7 @@ from fastapi import (
     status)
 from sqlalchemy.orm import Session
 from app.schema import users_schema
-from app.database import get_db
+from app.core.sqlalchemy.database import get_db
 from app.crud import users_crud
 from app.utility import auth
 

@@ -18,17 +18,6 @@ def get_spot_by_id(db: Session, id: int):
     ).first()
 
 
-def get_spot_by_name(db: Session, name: str):
-    return db.query(spots_model.Spot).filter(
-        spots_model.Spot.name == name
-    ).first()
-
-
-def get_spot_by_location(db: Session, lat: float, lng: float):
-    spot_condition = set_spot_condition(lat, lng)
-    return db.query(spots_model.Spot).filter(spot_condition).first()
-
-
 def get_registered_spot(db: Session, name: str, lat: float, lng: float):
     spot_condition = set_spot_condition(lat, lng)
     return db.query(spots_model.Spot).filter(

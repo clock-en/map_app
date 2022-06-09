@@ -3,7 +3,7 @@ from sqlalchemy.dialects.mysql import INTEGER as Integer
 from app.core.sqlalchemy.database import Base
 
 
-class Spot(Base):
+class SpotDataModel(Base):
     __tablename__ = 'spots'
 
     id = Column('id', Integer(unsigned=True), primary_key=True, index=True)
