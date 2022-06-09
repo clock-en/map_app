@@ -3,7 +3,7 @@ from app.domain.value_object.id import Id
 
 
 @dataclass(init=False, eq=True, frozen=True)
-class FetchSpotUsecaseInput(object):
+class FetchUserUsecaseInput(object):
     id: Id
 
     def __init__(

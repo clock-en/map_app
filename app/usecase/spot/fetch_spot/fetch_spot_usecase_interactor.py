@@ -13,7 +13,7 @@ class FetchSpotUsecaseInteractor(object):
         self.__query_service = SpotQueryService()
 
     def handle(self) -> FetchSpotUsecaseOutput:
-        spot = self.__query_service.fetch_spot_by_id(self.__input.user_id)
+        spot = self.__query_service.fetch_spot_by_id(self.__input.id)
         if spot is None:
             return FetchSpotUsecaseOutput(
                 is_success=False,

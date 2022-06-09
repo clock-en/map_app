@@ -9,9 +9,9 @@ class Email(object):
 
     EMAIL_REGEXP: ClassVar[str] = (
         r'^[0-9a-zA-Z_.+-]+@[0-9a-zA-Z-]+\.[0-9a-zA-Z-.]+$')
-    MAX_LENGTH: ClassVar[int] = 255
+    MAX_LENGTH: ClassVar[int] = 254
     FORMAT_ERROR_MESSAGE: ClassVar[str] = 'Invalid e-mail format.'
-    LENGTH_ERROR_MESSAGE: ClassVar[str] = 'It must be 50 characters or less.'
+    LENGTH_ERROR_MESSAGE: ClassVar[str] = 'It must be 254 characters or less.'
 
     def __init__(self, value: str) -> None:
         if self.__is_invalid_format(value):

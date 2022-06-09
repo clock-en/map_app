@@ -1,10 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.model import users_model
 from app.router import users_router, auth_router, spots_router
-from app.core.sqlalchemy.database import engine
+from app.core.sqlalchemy.database import engine, Base
 
-users_model.Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 

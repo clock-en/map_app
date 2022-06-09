@@ -8,10 +8,10 @@ class Password():
     value: str
 
     PASSWORD_REG_EXP: ClassVar[str] = (
-        r'/\A(?=.*?[a-z])(?=.*?\d)[a-z\d]{8,100}+\z/i')
-    MAX_LENGTH: ClassVar[int] = 20
+        r'\A(?=.*?[a-z])(?=.*?\d)(?=.*?[!-/:-@[-`{-~])[!-~]{8,100}\Z(?i)')
+    MAX_LENGTH: ClassVar[int] = 100
     FORMAT_ERROR_MESSAGE: ClassVar[str] = 'Invalid password format.'
-    LENGTH_ERROR_MESSAGE: ClassVar[str] = 'It must be 50 characters or less.'
+    LENGTH_ERROR_MESSAGE: ClassVar[str] = 'It must be 100 characters or less.'
 
     def __init__(self, value: str) -> None:
         if self.__is_invalid_format(value):

@@ -5,6 +5,7 @@ from app.core.sqlalchemy.database import Base
 
 class User(Base):
     __tablename__ = 'users'
+    __table_args__ = {'extend_existing': True}
 
     id = Column('id', Integer(unsigned=True), primary_key=True, index=True)
     name = Column(String)

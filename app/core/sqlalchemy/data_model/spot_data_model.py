@@ -5,6 +5,7 @@ from app.core.sqlalchemy.database import Base
 
 class SpotDataModel(Base):
     __tablename__ = 'spots'
+    __table_args__ = {'extend_existing': True}
 
     id = Column('id', Integer(unsigned=True), primary_key=True, index=True)
     name = Column('name', String, unique=True, index=True)

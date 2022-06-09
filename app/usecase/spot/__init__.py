@@ -6,9 +6,10 @@ from .fetch_spots.fetch_spots_usecase_interactor import (
     FetchSpotsUsecaseInteractor)
 from .fetch_spots.fetch_spots_usecase_output import FetchSpotsUsecaseOutput
 
-from fetch_spot.fetch_spot_usecase_input import FetchSpotUsecaseInput
-from fetch_spot.fetch_spot_usecase_interactor import FetchSpotUsecaseInteractor
-from fetch_spot.fetch_spot_usecase_output import FetchSpotUsecaseOutput
+from .fetch_spot.fetch_spot_usecase_input import FetchSpotUsecaseInput
+from .fetch_spot.fetch_spot_usecase_interactor import (
+    FetchSpotUsecaseInteractor)
+from .fetch_spot.fetch_spot_usecase_output import FetchSpotUsecaseOutput
 
 __all__ = [
     'CreateSpotUsecaseInput',
