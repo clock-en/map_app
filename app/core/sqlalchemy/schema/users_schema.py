@@ -1,17 +1,18 @@
 from pydantic import BaseModel, Field, EmailStr
+from app.domain.value_object.user.user_name import UserName
+from app.domain.value_object.password import Password
 
 
 class UserBase(BaseModel):
-    name: str = Field(max_length=50, example='hoge')
+    name: str = Field(max_length=UserName.MAX_LENGTH, example='hoge')
     email: EmailStr = Field(example='hoge@example.com')
 
 
 class UserCreate(UserBase):
     password: str = Field(
-        regex=(
-            r'\A(?=.*?[a-z])(?=.*?\d)(?=.*?[!-/:-@[-`{-~])[!-~]{8,100}\Z(?i)'),
-        min_length=8,
-        max_length=20,
+        regex=Password.PASSWORD_REG_EXP,
+        min_length=Password.MIN_LENGTH,
+        max_length=Password.MAX_LENGTH,
         example='test-1234')
 
 
