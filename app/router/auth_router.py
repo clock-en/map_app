@@ -1,9 +1,7 @@
 from fastapi import APIRouter, Depends, Response, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy.orm import Session
+from app.core.sqlalchemy.schema import auth_schema
 from app.usecase.auth import LoginUsecaseInput, LoginUsecaseInteractor
 from app.adapter.presenter.auth import LoginPresenter
-from app.core.sqlalchemy.database import get_db
 from app.domain.value_object.error.unauthorized_error import UnauthorizedError
 from app.utility import auth
 
@@ -13,8 +11,7 @@ router = APIRouter(prefix='/api/auth', tags=['auth'])
 @router.post('/login')
 async def login(
     response: Response,
-    form_data: OAuth2PasswordRequestForm = Depends(),
-    db: Session = Depends(get_db)
+    form_data: auth_schema.OAuth2EmailPasswordRequestForm = Depends(),
 ):
     input = LoginUsecaseInput(
         email=form_data.username,
