@@ -27,4 +27,4 @@ class Password():
         return re.match(self.PASSWORD_REG_EXP, value) is None
 
     def __is_out_of_range(self, value: str) -> bool:
-        return self.MIN_LENGTH < len(value) or self.MAX_LENGTH < len(value)
+        return len(value) < self.MIN_LENGTH or self.MAX_LENGTH < len(value)
