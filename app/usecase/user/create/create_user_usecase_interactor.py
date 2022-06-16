@@ -23,7 +23,7 @@ class CreateUserUsecaseInteractor(object):
             return CreateUserUsecaseOutput(
                 is_success=False,
                 error=UnprocessableEntityError(
-                    field='email', message='Email already registered')
+                    field='email', message='入力されたメールアドレスはすでに登録されています')
             )
 
         new_user = NewUser(

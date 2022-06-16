@@ -17,6 +17,6 @@ class FetchSpotUsecaseInteractor(object):
         if spot is None:
             return FetchSpotUsecaseOutput(
                 is_success=False,
-                error=NotFoundError('Spot not found.')
+                error=NotFoundError('スポットは見つかりませんでした')
             )
         return FetchSpotUsecaseOutput(is_success=True, spot=spot)

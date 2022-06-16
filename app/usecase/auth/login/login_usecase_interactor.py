@@ -18,7 +18,7 @@ class LoginUsecaseInteractor(object):
         if user is None:
             return LoginUsecaseOutput(
                 is_success=False,
-                error=UnauthorizedError('Incorrect username or password.')
+                error=UnauthorizedError('ユーザー名またはパスワードが誤っています')
             )
 
         # JWT発行
@@ -26,7 +26,7 @@ class LoginUsecaseInteractor(object):
         access_token = auth.create_access_token(user.id.value, expires)
 
         # リクエスト時のカスタムヘッダー用にユーザーごとに固定となるトークンを発行する
-        identified_token = auth.create_identified_token(user.id)
+        identified_token = auth.create_identified_token(user.id.value)
         return LoginUsecaseOutput(
             is_success=True,
             access_token=access_token,

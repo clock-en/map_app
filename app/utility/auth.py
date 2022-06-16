@@ -70,6 +70,7 @@ def authorize_with_x_token(
     credentials_exception = create_credentials_exception()
     if x_token is None:
         raise credentials_exception
+    print(user.id)
     identified_token = create_identified_token(user.id)
     if x_token != identified_token:
         raise credentials_exception
