@@ -17,6 +17,6 @@ class FetchUserUsecaseInteractor(object):
         if user is None:
             return FetchUserUsecaseOutput(
                 is_success=False,
-                error=NotFoundError('User not found.')
+                error=NotFoundError('ユーザーは見つかりませんでした')
             )
         return FetchUserUsecaseOutput(is_success=True, user=user)

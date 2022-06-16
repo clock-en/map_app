@@ -28,12 +28,12 @@ class CreateSpotUsecaseInteractor(object):
                 return CreateSpotUsecaseOutput(
                     is_success=False,
                     error=UnprocessableEntityError(
-                        field='name', message='Name already registered')
+                        field='name', message='入力されたスポット名はすでに登録されています')
                 )
             return CreateSpotUsecaseOutput(
                 is_success=False,
                 error=UnprocessableEntityError(
-                    field='location', message='Location already registered')
+                    field='location', message='入力されたロケーションはすでに登録されています')
             )
 
         new_spot = NewSpot(
