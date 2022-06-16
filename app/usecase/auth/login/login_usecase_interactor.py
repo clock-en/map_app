@@ -15,7 +15,7 @@ class LoginUsecaseInteractor(object):
 
     def handle(self) -> LoginUsecaseOutput:
         user = self.__query_service.fetch_user_by_email(self.__input.email)
-        if user is None:
+        if (user is None) or (user.password != self.__input.password.value):
             return LoginUsecaseOutput(
                 is_success=False,
                 error=UnauthorizedError('ユーザー名またはパスワードが誤っています')
