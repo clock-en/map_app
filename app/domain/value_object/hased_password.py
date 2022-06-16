@@ -13,5 +13,5 @@ class HashedPassword():
         object.__setattr__(self, 'pwd_context', CryptContext(
             schemes=['bcrypt'], deprecated='auto'))
 
-    def varify(self, password: Password):
-        return self.value == self.pwd_context.hash(password)
+    def verify(self, password: Password):
+        return self.pwd_context.verify(password, self.value)

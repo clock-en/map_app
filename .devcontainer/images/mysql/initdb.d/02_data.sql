@@ -8,7 +8,7 @@ password: 'test-1234'
 INSERT INTO users (name, email, password) VALUES (
     'test1',
     'test1@example.com',
-    '$2b$12$3vyg/LSZ2mcZ9wE8IsbIZ.ktpbknPIr/xY4PCCFlDGNLxaKMdEOMK'
+    '$2b$12$9hO29GtfAY3xmv83yr3u7uMroqPStHQuPptNjm3Qu1Rb7UU9UB4Ga'
 );
 
 /*
