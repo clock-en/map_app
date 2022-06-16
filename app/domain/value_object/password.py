@@ -1,11 +1,13 @@
 from dataclasses import dataclass
 from typing import ClassVar
+from passlib.context import CryptContext
 import re
 
 
 @dataclass(init=False, eq=True, frozen=True)
 class Password():
     value: str
+    pwd_context: CryptContext
 
     PASSWORD_REG_EXP: ClassVar[str] = (
         r'\A(?=.*?[a-z])(?=.*?\d)(?=.*?[!-/:-@[-`{-~])[!-~]{8,100}\Z(?i)')
@@ -22,9 +24,14 @@ class Password():
             raise ValueError(self.__class__.__name__ + ':',
                              self.LENGTH_ERROR_MESSAGE)
         object.__setattr__(self, 'value', value)
+        object.__setattr__(self, 'pwd_context', CryptContext(
+            schemes=['bcrypt'], deprecated='auto'))
 
     def __is_invalid_format(self, value: str) -> bool:
         return re.match(self.PASSWORD_REG_EXP, value) is None
 
     def __is_out_of_range(self, value: str) -> bool:
         return len(value) < self.MIN_LENGTH or self.MAX_LENGTH < len(value)
+
+    def hash(self) -> str:
+        return self.pwd_context.hash(self.value)
