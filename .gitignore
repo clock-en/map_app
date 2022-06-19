@@ -163,3 +163,4 @@ cython_debug/
 .serverless
 node_modules/
 .env.development
+serverless.yml
