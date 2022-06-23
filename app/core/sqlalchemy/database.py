@@ -16,7 +16,7 @@ SQLALCHEMY_DATABASE_URL = ('mysql+mysqlconnector://{}:{}@{}/{}?charset=utf8mb4'
                                DB_NAME
                            ))
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+engine = create_engine(SQLALCHEMY_DATABASE_URL, pool_recycle=600)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
