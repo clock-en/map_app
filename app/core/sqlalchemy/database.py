@@ -8,7 +8,7 @@ DB_PASSWORD = os.environ['MYSQL_PASSWORD']
 DB_HOST = os.environ['MYSQL_HOST']
 DB_NAME = os.environ['MYSQL_DB']
 
-SQLALCHEMY_DATABASE_URL = ('mysql+mysqldb://{}:{}@{}/{}?charset=utf8mb4'
+SQLALCHEMY_DATABASE_URL = ('mysql+mysqlconnector://{}:{}@{}/{}?charset=utf8mb4'
                            .format(
                                DB_USER,
                                DB_PASSWORD,
@@ -16,7 +16,7 @@ SQLALCHEMY_DATABASE_URL = ('mysql+mysqldb://{}:{}@{}/{}?charset=utf8mb4'
                                DB_NAME
                            ))
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+engine = create_engine(SQLALCHEMY_DATABASE_URL, pool_recycle=600)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
