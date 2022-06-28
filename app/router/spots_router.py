@@ -9,9 +9,10 @@ from app.adapter.presenter.spots import (
 from app.usecase.spot import (
     CreateSpotUsecaseInput,
     CreateSpotUsecaseInteractor,
+    FetchSpotsUsecaseInput,
     FetchSpotsUsecaseInteractor,
     FetchSpotUsecaseInput,
-    FetchSpotUsecaseInteractor
+    FetchSpotUsecaseInteractor,
 )
 from app.domain.value_object.error.unprocessable_entity_error import (
     UnprocessableEntityError)
@@ -27,8 +28,9 @@ router = APIRouter(prefix='/api/spots', tags=['spots'])
     status_code=status.HTTP_201_CREATED,
     dependencies=[Depends(auth.authorize_user)]
 )
-async def get_spots():
-    usecase = FetchSpotsUsecaseInteractor()
+async def get_spots(user_id: int = None):
+    input = FetchSpotsUsecaseInput(user_id)
+    usecase = FetchSpotsUsecaseInteractor(input)
     presenter = SpotsIndexPresenter(usecase.handle())
     viewModel = presenter.api()
     return viewModel['spots']

@@ -17,6 +17,11 @@ class SpotDao(Dao):
             SpotDataModel.id == id.value
         ).first()
 
+    def get_spot_by_user_id(self, user_id: Id):
+        return self.db.query(SpotDataModel).filter(
+            SpotDataModel.user_id == user_id.value
+        ).all()
+
     def get_registered_spot(
             self, name: SpotName, latitude: Latitude, longitude: Longitude):
         spot_condition = self.__set_spot_condition(

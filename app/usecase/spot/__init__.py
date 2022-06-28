@@ -2,6 +2,7 @@ from .create.create_spot_usecase_input import CreateSpotUsecaseInput
 from .create.create_spot_usecase_interactor import CreateSpotUsecaseInteractor
 from .create.create_spot_usecase_output import CreateSpotUsecaseOutput
 
+from .fetch_spots.fetch_spots_usecase_input import FetchSpotsUsecaseInput
 from .fetch_spots.fetch_spots_usecase_interactor import (
     FetchSpotsUsecaseInteractor)
 from .fetch_spots.fetch_spots_usecase_output import FetchSpotsUsecaseOutput
@@ -15,6 +16,7 @@ __all__ = [
     'CreateSpotUsecaseInput',
     'CreateSpotUsecaseInteractor',
     'CreateSpotUsecaseOutput',
+    'FetchSpotsUsecaseInput',
     'FetchSpotsUsecaseInteractor',
     'FetchSpotsUsecaseOutput',
     'FetchSpotUsecaseInput',

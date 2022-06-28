@@ -1,13 +1,13 @@
 from app.adapter.view_model.spot.spots_index_view_model import (
     SpotsIndexViewModel)
-from app.usecase.spot.create.create_spot_usecase_output import (
-    CreateSpotUsecaseOutput)
+from app.usecase.spot import (
+    FetchSpotsUsecaseOutput)
 
 
 class SpotsIndexPresenter(object):
-    __output: CreateSpotUsecaseOutput
+    __output: FetchSpotsUsecaseOutput
 
-    def __init__(self, output: CreateSpotUsecaseOutput) -> None:
+    def __init__(self, output: FetchSpotsUsecaseOutput) -> None:
         self.__output = output
 
     def api(self):
