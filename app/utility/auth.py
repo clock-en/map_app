@@ -108,11 +108,12 @@ def set_access_token_cookie(
     access_token: str,
     expires: str
 ):
+    samesite = 'strict' if os.environ['APP_ENV'] == 'DEV' else 'none'
     response.set_cookie(
         key='access_token',
         value=f'Bearer {access_token}',
         httponly=True,
         secure=False if os.environ['APP_ENV'] == 'DEV' else True,
-        samesite='lax',
+        samesite=samesite,
         expires=expires.strftime("%a, %d %b %Y %H:%M:%S GMT"),
     )
