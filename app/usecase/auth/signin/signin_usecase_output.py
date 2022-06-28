@@ -5,7 +5,7 @@ from app.domain.value_object.error.unauthorized_error import (
 
 
 @dataclass(init=False, eq=True, frozen=True)
-class LoginUsecaseOutput(object):
+class SignInUsecaseOutput(object):
     is_success: bool
     access_token: Union[str, None]
     identified_token: Union[str, None]

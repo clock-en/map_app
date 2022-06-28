@@ -17,7 +17,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
 oauth2_scheme = auth_schema.OAuth2PasswordBearerWithCookie(
-    tokenUrl='api/auth/login')
+    tokenUrl='api/auth/signin')
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
 
