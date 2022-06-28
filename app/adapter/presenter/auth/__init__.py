@@ -1,5 +1,5 @@
-from .login_presenter import LoginPresenter
+from .signin_presenter import SignInPresenter
 
 __all__ = [
-    'LoginPresenter'
+    'SignInPresenter'
 ]

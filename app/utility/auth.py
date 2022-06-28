@@ -17,7 +17,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
 oauth2_scheme = auth_schema.OAuth2PasswordBearerWithCookie(
-    tokenUrl='api/auth/login')
+    tokenUrl='api/auth/signin')
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
 
@@ -70,7 +70,6 @@ def authorize_with_x_token(
     credentials_exception = create_credentials_exception()
     if x_token is None:
         raise credentials_exception
-    print(user.id)
     identified_token = create_identified_token(user.id)
     if x_token != identified_token:
         raise credentials_exception
@@ -108,11 +107,12 @@ def set_access_token_cookie(
     access_token: str,
     expires: str
 ):
+    samesite = 'strict' if os.environ['APP_ENV'] == 'DEV' else 'none'
     response.set_cookie(
         key='access_token',
         value=f'Bearer {access_token}',
         httponly=True,
         secure=False if os.environ['APP_ENV'] == 'DEV' else True,
-        samesite='lax',
+        samesite=samesite,
         expires=expires.strftime("%a, %d %b %Y %H:%M:%S GMT"),
     )

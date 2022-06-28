@@ -1,24 +1,24 @@
 from fastapi import APIRouter, Depends, Response, HTTPException, status
 from app.core.sqlalchemy.schema import auth_schema
-from app.usecase.auth import LoginUsecaseInput, LoginUsecaseInteractor
-from app.adapter.presenter.auth import LoginPresenter
+from app.usecase.auth import SignInUsecaseInput, SignInUsecaseInteractor
+from app.adapter.presenter.auth import SignInPresenter
 from app.domain.value_object.error.unauthorized_error import UnauthorizedError
 from app.utility import auth
 
 router = APIRouter(prefix='/api/auth', tags=['auth'])
 
 
-@router.post('/login')
-async def login(
+@router.post('/signin')
+async def signin(
     response: Response,
     form_data: auth_schema.OAuth2EmailPasswordRequestForm = Depends(),
 ):
-    input = LoginUsecaseInput(
+    input = SignInUsecaseInput(
         email=form_data.username,
         password=form_data.password
     )
-    usecase = LoginUsecaseInteractor(input)
-    presenter = LoginPresenter(usecase.handle())
+    usecase = SignInUsecaseInteractor(input)
+    presenter = SignInPresenter(usecase.handle())
     viewModel = presenter.api()
 
     if not viewModel['is_success']:
@@ -34,7 +34,7 @@ async def login(
     return {'token': viewModel['identified_token']}
 
 
-@router.post('/logout')
-async def logout(response: Response):
+@router.post('/signout')
+async def signout(response: Response):
     response.delete_cookie('access_token')
     return {'isLoggedOut': True}

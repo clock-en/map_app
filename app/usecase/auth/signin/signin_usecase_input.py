@@ -4,7 +4,7 @@ from app.domain.value_object.password import Password
 
 
 @dataclass(init=False, eq=True, frozen=True)
-class LoginUsecaseInput(object):
+class SignInUsecaseInput(object):
     email: Email
     password: Password
 

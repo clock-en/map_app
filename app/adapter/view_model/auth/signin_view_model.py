@@ -1,10 +1,10 @@
-from app.usecase.auth import LoginUsecaseOutput
+from app.usecase.auth import SignInUsecaseOutput
 
 
-class LoginViewModel(object):
-    __output: LoginUsecaseOutput
+class SignInViewModel(object):
+    __output: SignInUsecaseOutput
 
-    def __init__(self, output: LoginUsecaseOutput) -> None:
+    def __init__(self, output: SignInUsecaseOutput) -> None:
         self.__output = output
 
     def convertToFastApi(self):

@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.router import users_router, auth_router, spots_router
@@ -7,10 +8,8 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-# TODO: developと本番を分けられるようにする
-origins = ['http://localhost:3000']
+origins = [os.environ['FRONTEND_ORIGIN']]
 
-# TODO: 最終的にセキュリティが最適化されているかを確認する
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
