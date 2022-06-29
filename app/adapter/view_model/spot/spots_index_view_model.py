@@ -27,6 +27,7 @@ class SpotsIndexViewModel(object):
         return SpotDataModel(
             id=spot.id.value,
             name=spot.name.value,
+            description=spot.description.value,
             latitude=spot.latitude.value,
             longitude=spot.longitude.value,
             user_id=spot.user_id.value

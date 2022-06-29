@@ -22,6 +22,7 @@ class SpotsCreateViewModel(object):
         return SpotDataModel(
             id=self.__output.spot.id.value,
             name=self.__output.spot.name.value,
+            description=self.__output.spot.description.value,
             latitude=self.__output.spot.latitude.value,
             longitude=self.__output.spot.longitude.value,
             user_id=self.__output.spot.user_id.value

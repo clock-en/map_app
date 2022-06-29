@@ -33,6 +33,7 @@ class SpotDao(Dao):
     def create_spot(self, spot: NewSpot):
         new_spot = SpotDataModel(
             name=spot.name.value,
+            description=spot.description.value,
             latitude=spot.latitude.value,
             longitude=spot.longitude.value,
             user_id=spot.user_id.value

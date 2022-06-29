@@ -35,3 +35,12 @@ def valid_number_value(
             and (value < min or max < value)):
         raise ValueError(
             '{}は{}以上、{}以内の値で入力してください'.format(label, min, max))
+
+
+def valid_float_type(
+    label: str,
+    value: float,
+):
+    if not isinstance(value, float):
+        raise ValueError(
+            '{}は小数で入力してください'.format(label))

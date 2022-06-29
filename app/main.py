@@ -15,7 +15,8 @@ app.add_middleware(
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=['*'],
-    allow_headers=[],
+    allow_headers=['Content-Type', 'X-Amz-Date', 'Authorization',
+                   'X-Api-Key', 'X-Amz-Security-Token', 'X-Token'],
 )
 
 app.include_router(auth_router.router)
