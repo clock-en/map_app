@@ -1,3 +1,4 @@
+from typing import Union
 from pydantic import BaseModel, Field, validator
 from app.domain.value_object.spot.spot_name import SpotName
 from app.domain.value_object.spot.spot_description import SpotDescription
@@ -10,8 +11,8 @@ class SpotBase(BaseModel):
     name: str = Field(max_length=SpotName.MAX_LENGTH, example='東京駅')
     description: str = Field(max_length=SpotDescription.MAX_LENGTH,
                              example='スポットの説明文が入る')
-    latitude: float = Field(example=35.68142354732969)
-    longitude: float = Field(example=139.76709261114823)
+    latitude: Union[float, str] = Field(example=35.68142354732969)
+    longitude: Union[float, str] = Field(example=139.76709261114823)
 
     @validator('name')
     def valid_name(cls, v):
@@ -32,6 +33,7 @@ class SpotBase(BaseModel):
     def valid_latitude(cls, v):
         label = '緯度'
         validators.not_blank(label, v)
+        validators.valid_float_type(label, v)
         validators.valid_number_value(
             label=label,
             value=v,
@@ -44,6 +46,7 @@ class SpotBase(BaseModel):
     def valid_longitude(cls, v):
         label = '経度'
         validators.not_blank(label, v)
+        validators.valid_float_type(label, v)
         validators.valid_number_value(
             label=label,
             value=v,
