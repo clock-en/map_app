@@ -30,7 +30,7 @@ def valid_number_value(
             '{}は{}以上の値で入力してください'.format(label, min))
     if (min is None) and (max is not None) and (max < value):
         raise ValueError(
-            '{}は{}文字の値で入力してください'.format(label, max))
+            '{}は{}以下の値で入力してください'.format(label, max))
     if ((min is not None) and (max is not None)
             and (value < min or max < value)):
         raise ValueError(
@@ -44,3 +44,13 @@ def valid_float_type(
     if not isinstance(value, float):
         raise ValueError(
             '{}は小数で入力してください'.format(label))
+
+
+def valid_id_value(
+    label: str,
+    value: Union[int, str],
+    min: int = None,
+):
+    if isinstance(value, str) or value < min:
+        raise ValueError(
+            '{}の識別子が不正です'.format(label))
