@@ -1,9 +1,10 @@
-from typing import Union
+from typing import Union, List
 from pydantic import BaseModel, Field, validator
 from app.domain.value_object.spot.spot_name import SpotName
 from app.domain.value_object.spot.spot_description import SpotDescription
 from app.domain.value_object.latitude import Latitude
 from app.domain.value_object.longitude import Longitude
+from .comments_schema import Comment
 from . import validators
 
 
@@ -66,3 +67,8 @@ class Spot(SpotBase):
 
     class Config:
         orm_mode = True
+
+
+class SpotWithComments(Spot):
+    comments: List[Comment] = Field(
+        example={'id': 1, 'user_id': 1, 'spot_id': 1, 'comment': 'コメント文が入る'})

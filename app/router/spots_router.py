@@ -72,7 +72,7 @@ async def create_spot(
 
 @router.get(
     '/{id}',
-    response_model=spots_schema.Spot,
+    response_model=spots_schema.SpotWithComments,
     status_code=status.HTTP_200_OK,
     dependencies=[Depends(auth.authorize_user)]
 )

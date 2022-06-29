@@ -1,4 +1,5 @@
 from sqlalchemy import Column, String, Float, ForeignKey
+from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.mysql import INTEGER as Integer
 from app.core.sqlalchemy.database import Base
 
@@ -14,3 +15,7 @@ class SpotDataModel(Base):
     longitude = Column('longitude', Float)
     user_id = Column('user_id', Integer(unsigned=True),
                      ForeignKey('users.id', ondelete='CASCADE'))
+
+
+class SpotWithCommentsDataModel(SpotDataModel):
+    comments = relationship('CommentDataModel')
