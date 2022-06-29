@@ -38,6 +38,7 @@ class CreateSpotUsecaseInteractor(object):
 
         new_spot = NewSpot(
             name=self.__input.name.value,
+            description=self.__input.description.value,
             latitude=self.__input.latitude.value,
             longitude=self.__input.longitude.value,
             user_id=self.__input.user_id.value

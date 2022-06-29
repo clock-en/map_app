@@ -16,6 +16,6 @@ name: '東京駅'
 location: 35.68142354732969, 139.76709261114823
 user_id: 1
 */
-INSERT INTO spots (name, latitude, longitude, user_id) VALUES
-('東京駅',35.68142354732969,139.76709261114823,1),
-('皇居',35.685520571314576, 139.7529408938786,1);
+INSERT INTO spots (name, description, latitude, longitude, user_id) VALUES
+('東京駅', '全国各地の駅弁が購入できる',35.68147,139.76708,1),
+('皇居', 'ランニングに最適！',35.68551, 139.75276,1);

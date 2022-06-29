@@ -9,6 +9,7 @@ class SpotDataModel(Base):
 
     id = Column('id', Integer(unsigned=True), primary_key=True, index=True)
     name = Column('name', String, unique=True, index=True)
+    description = Column('description', String)
     latitude = Column('latitude', Float)
     longitude = Column('longitude', Float)
     user_id = Column('user_id', Integer(unsigned=True),

@@ -1,6 +1,7 @@
 from typing import List
 from fastapi import APIRouter, Body, Path, Depends, HTTPException, status
 from app.core.sqlalchemy.schema import spots_schema
+from app.core.sqlalchemy.schema import users_schema
 from app.adapter.presenter.spots import (
     SpotsCreatePresenter,
     SpotsIndexPresenter,
@@ -40,17 +41,18 @@ async def get_spots(user_id: int = None):
     '',
     response_model=spots_schema.Spot,
     status_code=status.HTTP_201_CREATED,
-    dependencies=[Depends(auth.validate_content_type),
-                  Depends(auth.authorize_with_x_token)]
+    dependencies=[Depends(auth.validate_content_type)]
 )
 async def create_spot(
     spot: spots_schema.SpotCreate = Body(embed=False),
+    current_user: users_schema.User = Depends(auth.authorize_with_x_token)
 ):
     input = CreateSpotUsecaseInput(
         name=spot.name,
         latitude=spot.latitude,
+        description=spot.description,
         longitude=spot.longitude,
-        user_id=spot.user_id
+        user_id=current_user.id
     )
     usecase = CreateSpotUsecaseInteractor(input)
     presenter = SpotsCreatePresenter(usecase.handle())
