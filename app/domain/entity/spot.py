@@ -32,21 +32,3 @@ class Spot():
         object.__setattr__(self, 'latitude', latitude)
         object.__setattr__(self, 'longitude', longitude)
         object.__setattr__(self, 'user_id', user_id)
-
-
-@dataclass(init=False, eq=True, frozen=True)
-class SpotWithComments(Spot):
-    comments: List[Comment]
-
-    def __init__(
-            self,
-            id: Id,
-            name: SpotName,
-            description: SpotDescription,
-            latitude: Latitude,
-            longitude: Longitude,
-            user_id: Id,
-            comments: List[Comment]
-    ) -> None:
-        super().__init__(id, name, description, latitude, longitude, user_id)
-        object.__setattr__(self, 'comments', comments)

@@ -1,7 +1,5 @@
 from sqlalchemy import or_, and_
-from app.core.sqlalchemy.data_model.spot_data_model import (
-    SpotDataModel, SpotWithCommentsDataModel)
-from app.core.sqlalchemy.data_model.comment_data_model import CommentDataModel
+from app.core.sqlalchemy.data_model.spot_data_model import SpotDataModel
 from app.domain.value_object.id import Id
 from app.domain.value_object.latitude import Latitude
 from app.domain.value_object.longitude import Longitude
@@ -15,11 +13,8 @@ class SpotDao(Dao):
         return self.db.query(SpotDataModel).all()
 
     def get_spot_by_id(self, id: Id):
-        return self.db.query(SpotWithCommentsDataModel).filter(
-            SpotWithCommentsDataModel.id == id.value
-        ).outerjoin(
-            CommentDataModel,
-            SpotWithCommentsDataModel.id == CommentDataModel.spot_id
+        return self.db.query(SpotDataModel).filter(
+            SpotDataModel.id == id.value
         ).first()
 
     def get_spot_by_user_id(self, user_id: Id):

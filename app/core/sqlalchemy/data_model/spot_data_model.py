@@ -15,7 +15,3 @@ class SpotDataModel(Base):
     longitude = Column('longitude', Float)
     user_id = Column('user_id', Integer(unsigned=True),
                      ForeignKey('users.id', ondelete='CASCADE'))
-
-
-class SpotWithCommentsDataModel(SpotDataModel):
-    comments = relationship('CommentDataModel')

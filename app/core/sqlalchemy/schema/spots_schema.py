@@ -67,8 +67,3 @@ class Spot(SpotBase):
 
     class Config:
         orm_mode = True
-
-
-class SpotWithComments(Spot):
-    comments: List[Comment] = Field(
-        example={'id': 1, 'user_id': 1, 'spot_id': 1, 'comment': 'コメント文が入る'})
