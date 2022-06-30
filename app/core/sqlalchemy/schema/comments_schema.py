@@ -2,6 +2,7 @@ from typing import Union
 from pydantic import BaseModel, Field, validator
 from app.domain.value_object.id import Id
 from app.domain.value_object.comment.comment_content import CommentContent
+from .users_schema import User
 from . import validators
 
 
@@ -36,3 +37,8 @@ class Comment(CommentsBase):
 
     class Config:
         orm_mode = True
+
+
+class CommentWithUser(Comment):
+    user: User = Field(
+        example={'id': 1, 'name': 'hoge', 'email': 'hoge@example.com'})

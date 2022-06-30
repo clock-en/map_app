@@ -1,8 +1,12 @@
+from typing import List
 from fastapi import APIRouter, Body, Depends, HTTPException, status
 from app.core.sqlalchemy.schema import comments_schema
 from app.core.sqlalchemy.schema import users_schema
-from app.adapter.presenter.comments import CommentsCreatePresenter
+from app.adapter.presenter.comments import (
+    CommentsPresenter, CommentsCreatePresenter)
 from app.usecase.comment import (
+    FetchCommentsUsecaseInput,
+    FetchCommentsUsecaseInteractor,
     CreateCommentUsecaseInput,
     CreateCommentUsecaseInteractor,
 )
@@ -11,6 +15,22 @@ from app.domain.value_object.error.unprocessable_entity_error import (
 from app.utility import auth
 
 router = APIRouter(prefix='/api/comments', tags=['comments'])
+
+
+@router.get(
+    '',
+    response_model=List[comments_schema.CommentWithUser],
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(auth.authorize_user)]
+)
+async def get_comments(
+    spot_id: int,
+):
+    input = FetchCommentsUsecaseInput(spot_id)
+    usecase = FetchCommentsUsecaseInteractor(input)
+    presenter = CommentsPresenter(usecase.handle())
+    viewModel = presenter.api()
+    return viewModel['comments']
 
 
 @router.post(
