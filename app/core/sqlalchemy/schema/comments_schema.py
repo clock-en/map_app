@@ -1,4 +1,5 @@
 from typing import Union
+from datetime import datetime
 from pydantic import BaseModel, Field, validator
 from app.domain.value_object.id import Id
 from app.domain.value_object.comment.comment_content import CommentContent
@@ -34,6 +35,8 @@ class CommentCreate(CommentsBase):
 class Comment(CommentsBase):
     id: int = Field(example=1)
     user_id: int = Field(example=1)
+    created_at: datetime = Field(example='YYYY-MM-DD HH:MI:SS')
+    updated_at: datetime = Field(example='YYYY-MM-DD HH:MI:SS')
 
     class Config:
         orm_mode = True

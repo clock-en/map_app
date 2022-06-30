@@ -32,7 +32,9 @@ class CommentsViewModel(object):
             user_id=comment.user_id.value,
             spot_id=comment.spot_id.value,
             comment=comment.comment.value,
-            user=self.__create_user_data_model(comment.user)
+            user=self.__create_user_data_model(comment.user),
+            created_at=comment.created_at.value,
+            updated_at=comment.updated_at.value
         )
 
     def __create_user_data_model(self, user: User):

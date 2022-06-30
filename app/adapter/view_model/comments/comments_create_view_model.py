@@ -24,4 +24,6 @@ class CommentsCreateViewModel(object):
             user_id=self.__output.comment.user_id.value,
             spot_id=self.__output.comment.spot_id.value,
             comment=self.__output.comment.comment.value,
+            created_at=self.__output.comment.created_at.value,
+            updated_at=self.__output.comment.updated_at.value
         )
