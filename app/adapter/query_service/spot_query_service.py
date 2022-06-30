@@ -67,6 +67,7 @@ class SpotQueryService(object):
 
         comments = list(map(self.__create_comment_entity,
                         db_spot.comments)) if db_spot.comments else []
+
         return SpotWithComments(
             id=Id(db_spot.id),
             name=SpotName(db_spot.name),

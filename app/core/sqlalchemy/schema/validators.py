@@ -49,7 +49,7 @@ def valid_float_type(
 def valid_id_value(
     label: str,
     value: Union[int, str],
-    min: int = None,
+    min: int,
 ):
     if isinstance(value, str) or value < min:
         raise ValueError(

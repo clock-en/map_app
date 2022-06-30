@@ -36,6 +36,8 @@ class Spot():
 
 @dataclass(init=False, eq=True, frozen=True)
 class SpotWithComments(Spot):
+    comments: List[Comment]
+
     def __init__(
             self,
             id: Id,

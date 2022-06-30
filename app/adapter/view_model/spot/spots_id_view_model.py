@@ -48,6 +48,6 @@ class SpotsIdViewModel(object):
         return CommentDataModel(
             id=comment.id.value,
             user_id=comment.user_id.value,
-            spot_id=comment.spot_id,
+            spot_id=comment.spot_id.value,
             comment=comment.comment.value
         )

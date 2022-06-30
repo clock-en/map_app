@@ -1,7 +1,7 @@
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.router import users_router, auth_router, spots_router
+from app.router import users_router, auth_router, spots_router, comments_router
 from app.core.sqlalchemy.database import engine, Base
 
 Base.metadata.create_all(bind=engine)
@@ -22,6 +22,7 @@ app.add_middleware(
 app.include_router(auth_router.router)
 app.include_router(users_router.router)
 app.include_router(spots_router.router)
+app.include_router(comments_router.router)
 
 """
 if __name__ == '__main__':
