@@ -1,11 +1,9 @@
 from dataclasses import dataclass
-from typing import List
 from app.domain.value_object.id import Id
 from app.domain.value_object.latitude import Latitude
 from app.domain.value_object.longitude import Longitude
 from app.domain.value_object.spot.spot_name import SpotName
 from app.domain.value_object.spot.spot_description import SpotDescription
-from .comment import Comment
 
 
 @dataclass(init=False, eq=True, frozen=True)

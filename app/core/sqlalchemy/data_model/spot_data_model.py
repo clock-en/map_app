@@ -1,5 +1,4 @@
 from sqlalchemy import Column, String, Float, ForeignKey
-from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.mysql import INTEGER as Integer
 from app.core.sqlalchemy.database import Base
 

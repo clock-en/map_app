@@ -1,10 +1,9 @@
-from typing import Union, List
+from typing import Union
 from pydantic import BaseModel, Field, validator
 from app.domain.value_object.spot.spot_name import SpotName
 from app.domain.value_object.spot.spot_description import SpotDescription
 from app.domain.value_object.latitude import Latitude
 from app.domain.value_object.longitude import Longitude
-from .comments_schema import Comment
 from . import validators
 
 
