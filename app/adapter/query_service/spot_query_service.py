@@ -19,7 +19,7 @@ class SpotQueryService(object):
     def fetch_all_spots(self) -> Union[Spot, None]:
         return self.__create_spot_list(self.__spot_dao.get_all_spots())
 
-    def fetch_spot_by_user_id(self, user_id: Id) -> Union[Spot, None]:
+    def fetch_spot_by_user_id(self, user_id: Id) -> Union[List[Spot], None]:
         return self.__create_spot_list(
             self.__spot_dao.get_spot_by_user_id(user_id))
 
@@ -27,14 +27,14 @@ class SpotQueryService(object):
         return self.__create_spot_with_comment_entity(
             self.__spot_dao.get_spot_by_id(id))
 
-    def fetch_registered_spot(
+    def fetch_registered_spots(
         self,
         name: SpotName,
         latitude: Latitude,
         longitude: Longitude
-    ) -> Union[Spot, None]:
-        return self.__create_spot_entity(
-            self.__spot_dao.get_registered_spot(name, latitude, longitude)
+    ) -> Union[List[Spot], None]:
+        return self.__create_spot_list(
+            self.__spot_dao.get_registered_spots(name, latitude, longitude)
         )
 
     def fetch_my_registered_spot_by_ids(

@@ -23,13 +23,13 @@ class SpotDao(Dao):
             SpotDataModel.user_id == user_id.value
         ).all()
 
-    def get_registered_spot(
+    def get_registered_spots(
             self, name: SpotName, latitude: Latitude, longitude: Longitude):
         spot_condition = self.__set_spot_condition(
             latitude.value, longitude.value)
         return self.db.query(SpotDataModel).filter(
             or_(SpotDataModel.name == name.value, spot_condition)
-        ).first()
+        ).all()
 
     def get_registered_spot_by_ids(
             self, id: Id, user_id: Id):

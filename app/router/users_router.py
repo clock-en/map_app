@@ -76,7 +76,9 @@ async def get_user(
     if not viewModel['is_success']:
         if viewModel['error'].type == NotFoundError.TYPE_CODE:
             raise HTTPException(
-                status_code=404, detail=viewModel['error'].message)
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=viewModel['error'].message
+            )
     return viewModel['user']
 
 
@@ -84,7 +86,7 @@ async def get_user(
     '/me',
     response_model=users_schema.User,
     status_code=status.HTTP_200_OK,
-    dependencies=[Depends(auth.authorize_user)]
+    dependencies=[Depends(auth.validate_content_type)]
 )
 async def modify_user(
     user: users_schema.UserModify = Body(embed=False),
@@ -100,7 +102,17 @@ async def modify_user(
     presenter = UsersModifyPresenter(usecase.handle())
     viewModel = presenter.api()
     if not viewModel['is_success']:
+        if viewModel['error'].type == UnprocessableEntityError.TYPE_CODE:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=[{
+                    'loc': ['body', viewModel['error'].field],
+                    'msg': viewModel['error'].message,
+                    'type': 'value_error.' + viewModel['error'].field
+                }])
         if viewModel['error'].type == ConflictError.TYPE_CODE:
             raise HTTPException(
-                status_code=409, detail=viewModel['error'].message)
+                status_code=status.HTTP_409_CONFLICT,
+                detail=viewModel['error'].message
+            )
     return viewModel['user']

@@ -19,23 +19,26 @@ class ModifySpotUsecaseInteractor(object):
         self.__query_service = SpotQueryService()
 
     def handle(self) -> ModifySpotUsecaseOutput:
-        registered_spot = self.__query_service.fetch_registered_spot(
+        registered_spots = self.__query_service.fetch_registered_spots(
             name=self.__input.name,
             latitude=self.__input.latitude,
             longitude=self.__input.longitude
         )
-        if registered_spot:
-            if registered_spot.name.value == self.__input.name.value:
+
+        for registered_spot in registered_spots:
+            if (registered_spot and
+                    not registered_spot.id.__eq__(self.__input.id)):
+                if registered_spot.name.__eq__(self.__input.name):
+                    return ModifySpotUsecaseOutput(
+                        is_success=False,
+                        error=UnprocessableEntityError(
+                            field='name', message='入力されたスポット名はすでに登録されています')
+                    )
                 return ModifySpotUsecaseOutput(
                     is_success=False,
                     error=UnprocessableEntityError(
-                        field='name', message='入力されたスポット名はすでに登録されています')
+                        field='location', message='入力されたロケーションはすでに登録されています')
                 )
-            return ModifySpotUsecaseOutput(
-                is_success=False,
-                error=UnprocessableEntityError(
-                    field='location', message='入力されたロケーションはすでに登録されています')
-            )
 
         db_spot = self.__query_service.fetch_my_registered_spot_by_ids(
             id=self.__input.id,
@@ -46,7 +49,7 @@ class ModifySpotUsecaseInteractor(object):
                 is_success=False,
                 error=BadRequestError('不正な値が送信されています。ページを更新し、操作をやり直してください')
             )
-        if db_spot.updated_at.value != self.__input.updated_at.value:
+        if not db_spot.updated_at.__eq__(self.__input.updated_at):
             return ModifySpotUsecaseOutput(
                 is_success=False,
                 error=ConflictError(
@@ -54,10 +57,10 @@ class ModifySpotUsecaseInteractor(object):
             )
 
         spot = self.__repository.modify(
-            id=self.__input.id.value,
-            name=self.__input.name.value,
-            description=self.__input.description.value,
-            latitude=self.__input.latitude.value,
-            longitude=self.__input.longitude.value,
+            id=self.__input.id,
+            name=self.__input.name,
+            description=self.__input.description,
+            latitude=self.__input.latitude,
+            longitude=self.__input.longitude,
         )
         return ModifySpotUsecaseOutput(is_success=True, spot=spot)

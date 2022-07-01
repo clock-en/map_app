@@ -61,6 +61,11 @@ class SpotCreate(SpotBase):
     pass
 
 
+class SpotModify(SpotBase):
+    id: int = Field(example=1)
+    updated_at: datetime = Field(example='YYYY-MM-DDTHH:MI:SS')
+
+
 class Spot(SpotBase):
     id: int = Field(example=1)
     user_id: int = Field(example=1)

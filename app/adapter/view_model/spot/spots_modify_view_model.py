@@ -1,12 +1,12 @@
 from app.core.sqlalchemy.data_model.spot_data_model import SpotDataModel
-from app.usecase.spot.create.create_spot_usecase_output import (
-    CreateSpotUsecaseOutput)
+from app.usecase.spot.modify.modify_spot_usecase_output import (
+    ModifySpotUsecaseOutput)
 
 
-class SpotsCreateViewModel(object):
-    __output: CreateSpotUsecaseOutput
+class SpotsModifyViewModel(object):
+    __output: ModifySpotUsecaseOutput
 
-    def __init__(self, output: CreateSpotUsecaseOutput) -> None:
+    def __init__(self, output: ModifySpotUsecaseOutput) -> None:
         self.__output = output
 
     def convertToFastApi(self):
