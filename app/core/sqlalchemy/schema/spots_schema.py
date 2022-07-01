@@ -1,4 +1,5 @@
 from typing import Union
+from datetime import datetime
 from pydantic import BaseModel, Field, validator
 from app.domain.value_object.spot.spot_name import SpotName
 from app.domain.value_object.spot.spot_description import SpotDescription
@@ -60,9 +61,16 @@ class SpotCreate(SpotBase):
     pass
 
 
+class SpotModify(SpotBase):
+    id: int = Field(example=1)
+    updated_at: datetime = Field(example='YYYY-MM-DDTHH:MI:SS')
+
+
 class Spot(SpotBase):
     id: int = Field(example=1)
     user_id: int = Field(example=1)
+    created_at: datetime = Field(example='YYYY-MM-DDTHH:MI:SS')
+    updated_at: datetime = Field(example='YYYY-MM-DDTHH:MI:SS')
 
     class Config:
         orm_mode = True

@@ -9,7 +9,7 @@ class SpotsCreateViewModel(object):
     def __init__(self, output: CreateSpotUsecaseOutput) -> None:
         self.__output = output
 
-    def convertToFastApi(self) -> CreateSpotUsecaseOutput:
+    def convertToFastApi(self):
         return {
             'is_success': self.__output.is_success,
             'error': self.__output.error,
@@ -25,5 +25,7 @@ class SpotsCreateViewModel(object):
             description=self.__output.spot.description.value,
             latitude=self.__output.spot.latitude.value,
             longitude=self.__output.spot.longitude.value,
-            user_id=self.__output.spot.user_id.value
+            user_id=self.__output.spot.user_id.value,
+            created_at=self.__output.spot.created_at.value,
+            updated_at=self.__output.spot.updated_at.value
         )

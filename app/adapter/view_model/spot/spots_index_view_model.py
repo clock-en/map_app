@@ -30,5 +30,7 @@ class SpotsIndexViewModel(object):
             description=spot.description.value,
             latitude=spot.latitude.value,
             longitude=spot.longitude.value,
-            user_id=spot.user_id.value
+            user_id=spot.user_id.value,
+            created_at=spot.created_at.value,
+            updated_at=spot.updated_at.value
         )

@@ -18,23 +18,24 @@ class CreateSpotUsecaseInteractor(object):
         self.__query_service = SpotQueryService()
 
     def handle(self) -> CreateSpotUsecaseOutput:
-        db_spot = self.__query_service.fetch_registered_spot(
+        db_spots = self.__query_service.fetch_registered_spots(
             name=self.__input.name,
             latitude=self.__input.latitude,
             longitude=self.__input.longitude
         )
-        if db_spot:
-            if db_spot.name.value == self.__input.name.value:
+        for db_spot in db_spots:
+            if db_spot:
+                if db_spot.name.__eq__(self.__input.name):
+                    return CreateSpotUsecaseOutput(
+                        is_success=False,
+                        error=UnprocessableEntityError(
+                            field='name', message='入力されたスポット名はすでに登録されています')
+                    )
                 return CreateSpotUsecaseOutput(
                     is_success=False,
                     error=UnprocessableEntityError(
-                        field='name', message='入力されたスポット名はすでに登録されています')
+                        field='location', message='入力されたロケーションはすでに登録されています')
                 )
-            return CreateSpotUsecaseOutput(
-                is_success=False,
-                error=UnprocessableEntityError(
-                    field='location', message='入力されたロケーションはすでに登録されています')
-            )
 
         new_spot = NewSpot(
             name=self.__input.name.value,

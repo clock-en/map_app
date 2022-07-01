@@ -1,28 +1,24 @@
-from typing import Union
 from app.core.sqlalchemy.data_model.spot_data_model import SpotDataModel
-from app.usecase.spot.fetch_spot.fetch_spot_usecase_output import (
-    FetchSpotUsecaseOutput)
+from app.usecase.spot.modify.modify_spot_usecase_output import (
+    ModifySpotUsecaseOutput)
 
 
-class SpotsIdViewModel(object):
-    __output: FetchSpotUsecaseOutput
+class SpotsModifyViewModel(object):
+    __output: ModifySpotUsecaseOutput
 
-    def __init__(self, output: FetchSpotUsecaseOutput) -> None:
+    def __init__(self, output: ModifySpotUsecaseOutput) -> None:
         self.__output = output
 
-    def convertToFastApi(self) -> FetchSpotUsecaseOutput:
+    def convertToFastApi(self):
         return {
             'is_success': self.__output.is_success,
             'error': self.__output.error,
-            'spot': self.__create_spot_with_comments_data_model()
+            'spot': self.__create_spot_data_model()
         }
 
-    def __create_spot_with_comments_data_model(
-        self
-    ) -> Union[SpotDataModel, None]:
+    def __create_spot_data_model(self):
         if self.__output.spot is None:
             return None
-
         return SpotDataModel(
             id=self.__output.spot.id.value,
             name=self.__output.spot.name.value,
