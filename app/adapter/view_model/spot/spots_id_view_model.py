@@ -14,17 +14,20 @@ class SpotsIdViewModel(object):
         return {
             'is_success': self.__output.is_success,
             'error': self.__output.error,
-            'spot': self.__create_spot_data_model()
+            'spot': self.__create_spot_with_comments_data_model()
         }
 
-    def __create_spot_data_model(self) -> Union[SpotDataModel, None]:
+    def __create_spot_with_comments_data_model(
+        self
+    ) -> Union[SpotDataModel, None]:
         if self.__output.spot is None:
             return None
+
         return SpotDataModel(
             id=self.__output.spot.id.value,
             name=self.__output.spot.name.value,
             description=self.__output.spot.description.value,
             latitude=self.__output.spot.latitude.value,
             longitude=self.__output.spot.longitude.value,
-            user_id=self.__output.spot.user_id.value
+            user_id=self.__output.spot.user_id.value,
         )

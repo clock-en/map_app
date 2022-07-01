@@ -24,7 +24,7 @@ class NewSpot():
         user_id: int,
     ) -> None:
         object.__setattr__(self, 'name', SpotName(name))
-        object.__setattr__(self, 'description', SpotName(description))
+        object.__setattr__(self, 'description', SpotDescription(description))
         object.__setattr__(self, 'latitude', Latitude(latitude))
         object.__setattr__(self, 'longitude', Longitude(longitude))
         object.__setattr__(self, 'user_id', Id(user_id))
