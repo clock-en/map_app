@@ -31,6 +31,13 @@ class SpotDao(Dao):
             or_(SpotDataModel.name == name.value, spot_condition)
         ).first()
 
+    def get_registered_spot_by_ids(
+            self, id: Id, user_id: Id):
+        return self.db.query(SpotDataModel).filter(
+            and_(SpotDataModel.id == id.value,
+                 SpotDataModel.user_id == user_id.value)
+        ).first()
+
     def create_spot(self, spot: NewSpot):
         new_spot = SpotDataModel(
             name=spot.name.value,

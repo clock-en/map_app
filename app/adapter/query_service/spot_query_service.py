@@ -37,6 +37,15 @@ class SpotQueryService(object):
             self.__spot_dao.get_registered_spot(name, latitude, longitude)
         )
 
+    def fetch_my_registered_spot_by_ids(
+        self,
+        id: Id,
+        user_id: Id,
+    ) -> Union[Spot, None]:
+        return self.__create_spot_entity(
+            self.__spot_dao.get_registered_spot_by_ids(id, user_id)
+        )
+
     def __create_spot_list(self, db_spots: List[SpotDataModel]) -> List[Spot]:
         return list(map(self.__create_spot_entity, db_spots))
 
