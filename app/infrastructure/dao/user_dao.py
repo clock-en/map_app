@@ -1,6 +1,7 @@
 from app.core.sqlalchemy.data_model.user_data_model import UserDataModel
 from app.domain.value_object.id import Id
 from app.domain.value_object.email import Email
+from app.domain.value_object.user.new_user import UserName
 from app.domain.value_object.user.new_user import NewUser
 from .dao import Dao
 
@@ -25,3 +26,11 @@ class UserDao(Dao):
         self.db.commit()
         self.db.refresh(new_user)
         return new_user
+
+    def modify_user(self, id: Id, name: UserName, email: Email):
+        user = self.db.query(UserDataModel).filter(
+            UserDataModel.id == id.value).first()
+        user.name = name.value
+        user.email = email.value
+        self.db.commit()
+        return user

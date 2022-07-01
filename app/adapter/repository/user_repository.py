@@ -24,3 +24,14 @@ class UserRepository(object):
             created_at=JaDatetime(db_user.created_at),
             updated_at=JaDatetime(db_user.updated_at)
         )
+
+    def modify(self, id: Id, name: UserName, email: Email) -> User:
+        db_user = self.__user_dao.modify_user(id, name, email)
+        return User(
+            id=Id(db_user.id),
+            name=UserName(db_user.name),
+            email=Email(db_user.email),
+            password=HashedPassword(db_user.password),
+            created_at=JaDatetime(db_user.created_at),
+            updated_at=JaDatetime(db_user.updated_at)
+        )
