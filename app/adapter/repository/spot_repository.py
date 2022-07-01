@@ -27,3 +27,24 @@ class SpotRepository(object):
             created_at=JaDatetime(db_spot.created_at),
             updated_at=JaDatetime(db_spot.updated_at),
         )
+
+    def modify(
+        self,
+        id: Id,
+        name: SpotName,
+        description: SpotDescription,
+        latitude: Latitude,
+        longitude: Longitude
+    ) -> Spot:
+        db_spot = self.__spot_dao.modify_spot(
+            id, name, description, latitude, longitude)
+        return Spot(
+            id=Id(db_spot.id),
+            name=SpotName(db_spot.name),
+            description=SpotDescription(db_spot.description),
+            latitude=Latitude(db_spot.latitude),
+            longitude=Longitude(db_spot.longitude),
+            user_id=Id(db_spot.user_id),
+            created_at=JaDatetime(db_spot.created_at),
+            updated_at=JaDatetime(db_spot.updated_at),
+        )
