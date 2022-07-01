@@ -17,7 +17,7 @@ class ModifyUserUsecaseInteractor(object):
 
     def handle(self) -> ModifyUserUsecaseOutput:
         db_user = self.__query_service.fetch_user_by_id(self.__input.id)
-        if db_user.updated_at != self.__input.updated_at.value:
+        if db_user.updated_at.value != self.__input.updated_at.value:
             return ModifyUserUsecaseOutput(
                 is_success=False,
                 error=ConflictError(

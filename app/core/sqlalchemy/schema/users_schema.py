@@ -46,6 +46,10 @@ class UserCreate(UserBase):
         return v
 
 
+class UserModify(UserBase):
+    updated_at: datetime = Field(example='YYYY-MM-DDTHH:MI:SS')
+
+
 class User(UserBase):
     id: int = Field(example=1)
     created_at: datetime = Field(example='YYYY-MM-DDTHH:MI:SS')
