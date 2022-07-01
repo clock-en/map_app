@@ -34,5 +34,7 @@ class CommentRepository(object):
             id=Id(db_user.id),
             name=UserName(db_user.name),
             email=Email(db_user.email),
-            password=Password(db_user.password)
+            password=Password(db_user.password),
+            created_at=JaDatetime(db_user.created_at),
+            updated_at=JaDatetime(db_user.updated_at)
         )

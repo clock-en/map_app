@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 from pydantic import BaseModel, Field, validator
 from app.domain.value_object.user.user_name import UserName
 from app.domain.value_object.password import Password
@@ -47,6 +48,8 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int = Field(example=1)
+    created_at: datetime = Field(example='YYYY-MM-DDTHH:MI:SS')
+    updated_at: datetime = Field(example='YYYY-MM-DDTHH:MI:SS')
 
     class Config:
         orm_mode = True

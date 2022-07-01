@@ -22,5 +22,7 @@ class UsersCreateViewModel(object):
             id=self.__output.user.id.value,
             name=self.__output.user.name.value,
             email=self.__output.user.email.value,
-            password=self.__output.user.password
+            password=self.__output.user.password,
+            created_at=self.__output.user.created_at.value,
+            updated_at=self.__output.user.updated_at.value
         )

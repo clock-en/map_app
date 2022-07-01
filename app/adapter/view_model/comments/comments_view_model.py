@@ -1,6 +1,7 @@
 from typing import List
 from app.core.sqlalchemy.data_model.comment_data_model import (
     CommentDataModel)
+from app.core.sqlalchemy.data_model.user_data_model import UserDataModel
 from app.usecase.comment.fetch_comments.fetch_comments_usecase_output import (
     FetchCommentsUsecaseOutput)
 from app.domain.entity.comment import Comment
@@ -26,7 +27,10 @@ class CommentsViewModel(object):
         return list(map(self.__create_comment_data_model,
                         self.__output.comments))
 
-    def __create_comment_data_model(self, comment: Comment):
+    def __create_comment_data_model(
+        self,
+        comment: Comment
+    ) -> CommentDataModel:
         return CommentDataModel(
             id=comment.id.value,
             user_id=comment.user_id.value,
@@ -37,10 +41,12 @@ class CommentsViewModel(object):
             updated_at=comment.updated_at.value
         )
 
-    def __create_user_data_model(self, user: User):
-        return User(
+    def __create_user_data_model(self, user: User) -> UserDataModel:
+        return UserDataModel(
             id=user.id.value,
             name=user.name.value,
             email=user.email.value,
-            password=user.password.value
+            password=user.password.value,
+            created_at=user.created_at.value,
+            updated_at=user.updated_at.value
         )
