@@ -1,8 +1,8 @@
+from datetime import datetime
 from sqlalchemy import Column, String, ForeignKey, DATETIME
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.mysql import INTEGER as Integer
 from app.core.sqlalchemy.database import Base
-from datetime import datetime
 
 
 class CommentDataModel(Base):

@@ -59,7 +59,9 @@ async def authorize_user(
         id=user.id.value,
         name=user.name.value,
         email=user.email.value,
-        password=user.password
+        password=user.password,
+        created_at=user.created_at.value,
+        updated_at=user.updated_at.value
     )
 
 

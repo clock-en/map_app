@@ -35,8 +35,8 @@ class CommentCreate(CommentsBase):
 class Comment(CommentsBase):
     id: int = Field(example=1)
     user_id: int = Field(example=1)
-    created_at: datetime = Field(example='YYYY-MM-DD HH:MI:SS')
-    updated_at: datetime = Field(example='YYYY-MM-DD HH:MI:SS')
+    created_at: datetime = Field(example='YYYY-MM-DDTHH:MI:SS')
+    updated_at: datetime = Field(example='YYYY-MM-DDTHH:MI:SS')
     user: User = Field(
         example={'id': 1, 'name': 'hoge', 'email': 'hoge@example.com'})
 

@@ -1,5 +1,7 @@
+from typing import Union
 from app.core.sqlalchemy.data_model.comment_data_model import (
     CommentDataModel)
+from app.core.sqlalchemy.data_model.user_data_model import UserDataModel
 from app.usecase.comment.create.create_comment_usecase_output import (
     CreateCommentUsecaseOutput)
 from app.domain.entity.user import User
@@ -18,7 +20,7 @@ class CommentsCreateViewModel(object):
             'comment': self.__create_comment_data_model()
         }
 
-    def __create_comment_data_model(self):
+    def __create_comment_data_model(self) -> Union[CommentDataModel, None]:
         if self.__output.comment is None:
             return None
         return CommentDataModel(
@@ -31,10 +33,12 @@ class CommentsCreateViewModel(object):
             updated_at=self.__output.comment.updated_at.value
         )
 
-    def __create_user_data_model(self, user: User):
-        return User(
+    def __create_user_data_model(self, user: User) -> UserDataModel:
+        return UserDataModel(
             id=user.id.value,
             name=user.name.value,
             email=user.email.value,
-            password=user.password.value
+            password=user.password.value,
+            created_at=user.created_at.value,
+            updated_at=user.updated_at
         )

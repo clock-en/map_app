@@ -1,11 +1,11 @@
 from app.core.sqlalchemy.data_model.user_data_model import UserDataModel
-from app.usecase.user import CreateUserUsecaseOutput
+from app.usecase.user import ModifyUserUsecaseOutput
 
 
-class UsersCreateViewModel(object):
-    __output: CreateUserUsecaseOutput
+class UsersModifyViewModel(object):
+    __output: ModifyUserUsecaseOutput
 
-    def __init__(self, output: CreateUserUsecaseOutput) -> None:
+    def __init__(self, output: ModifyUserUsecaseOutput) -> None:
         self.__output = output
 
     def convertToFastApi(self):

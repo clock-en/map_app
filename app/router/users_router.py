@@ -4,12 +4,16 @@ from app.usecase.user import (
     CreateUserUsecaseInput,
     CreateUserUsecaseInteractor,
     FetchUserUsecaseInput,
-    FetchUserUsecaseInteractor
+    FetchUserUsecaseInteractor,
+    ModifyUserUsecaseInput,
+    ModifyUserUsecaseInteractor
 )
-from app.adapter.presenter.user import UsersCreatePresenter, UsersIdPresenter
+from app.adapter.presenter.user import (
+    UsersCreatePresenter, UsersIdPresenter, UsersModifyPresenter)
 from app.domain.value_object.error.unprocessable_entity_error import (
     UnprocessableEntityError)
 from app.domain.value_object.error.notfound_error import NotFoundError
+from app.domain.value_object.error.conflict_error import ConflictError
 from app.utility import auth
 
 router = APIRouter(prefix='/api/users', tags=['users'])
@@ -73,4 +77,30 @@ async def get_user(
         if viewModel['error'].type == NotFoundError.TYPE_CODE:
             raise HTTPException(
                 status_code=404, detail=viewModel['error'].message)
+    return viewModel['user']
+
+
+@router.put(
+    '/me',
+    response_model=users_schema.User,
+    status_code=status.HTTP_200_OK,
+    dependencies=[Depends(auth.authorize_user)]
+)
+async def modify_user(
+    user: users_schema.UserModify = Body(embed=False),
+    current_user: users_schema.User = Depends(auth.authorize_with_x_token)
+):
+    input = ModifyUserUsecaseInput(
+        id=current_user.id,
+        name=user.name,
+        email=user.email,
+        updated_at=user.updated_at
+    )
+    usecase = ModifyUserUsecaseInteractor(input)
+    presenter = UsersModifyPresenter(usecase.handle())
+    viewModel = presenter.api()
+    if not viewModel['is_success']:
+        if viewModel['error'].type == ConflictError.TYPE_CODE:
+            raise HTTPException(
+                status_code=409, detail=viewModel['error'].message)
     return viewModel['user']

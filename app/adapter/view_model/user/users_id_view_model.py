@@ -23,5 +23,7 @@ class UsersIdViewModel(object):
             id=self.__output.user.id.value,
             name=self.__output.user.name.value,
             email=self.__output.user.email.value,
-            password=self.__output.user.password.value
+            password=self.__output.user.password.value,
+            created_at=self.__output.user.created_at.value,
+            updated_at=self.__output.user.updated_at.value
         )
