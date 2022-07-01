@@ -19,7 +19,7 @@ router = APIRouter(prefix='/api/comments', tags=['comments'])
 
 @router.get(
     '',
-    response_model=List[comments_schema.CommentWithUser],
+    response_model=List[comments_schema.Comment],
     status_code=status.HTTP_201_CREATED,
     dependencies=[Depends(auth.authorize_user)]
 )

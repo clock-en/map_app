@@ -21,7 +21,7 @@ class CommentsBase(BaseModel):
 
     @validator('comment')
     def valid_description(cls, v):
-        label = 'おすすめポイント'
+        label = 'コメント'
         validators.not_blank(label, v)
         validators.valid_length(label=label, value=v,
                                 max=CommentContent.MAX_LENGTH)
@@ -37,11 +37,8 @@ class Comment(CommentsBase):
     user_id: int = Field(example=1)
     created_at: datetime = Field(example='YYYY-MM-DD HH:MI:SS')
     updated_at: datetime = Field(example='YYYY-MM-DD HH:MI:SS')
+    user: User = Field(
+        example={'id': 1, 'name': 'hoge', 'email': 'hoge@example.com'})
 
     class Config:
         orm_mode = True
-
-
-class CommentWithUser(Comment):
-    user: User = Field(
-        example={'id': 1, 'name': 'hoge', 'email': 'hoge@example.com'})

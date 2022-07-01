@@ -1,6 +1,8 @@
-from app.core.sqlalchemy.data_model.comment_data_model import CommentDataModel
+from app.core.sqlalchemy.data_model.comment_data_model import (
+    CommentDataModel)
 from app.usecase.comment.create.create_comment_usecase_output import (
     CreateCommentUsecaseOutput)
+from app.domain.entity.user import User
 
 
 class CommentsCreateViewModel(object):
@@ -24,6 +26,15 @@ class CommentsCreateViewModel(object):
             user_id=self.__output.comment.user_id.value,
             spot_id=self.__output.comment.spot_id.value,
             comment=self.__output.comment.comment.value,
+            user=self.__create_user_data_model(self.__output.comment.user),
             created_at=self.__output.comment.created_at.value,
             updated_at=self.__output.comment.updated_at.value
+        )
+
+    def __create_user_data_model(self, user: User):
+        return User(
+            id=user.id.value,
+            name=user.name.value,
+            email=user.email.value,
+            password=user.password.value
         )

@@ -17,7 +17,4 @@ class CommentDataModel(Base):
     comment = Column('comment', String)
     created_at = Column('created_at', DATETIME, default=datetime.now)
     updated_at = Column('updated_at', DATETIME, default=datetime.now)
-
-
-class CommentWithUserDataModel(CommentDataModel):
     user = relationship('UserDataModel')

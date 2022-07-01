@@ -1,8 +1,8 @@
 from typing import List, Union
 from app.core.sqlalchemy.data_model.comment_data_model import (
-    CommentWithUserDataModel)
+    CommentDataModel)
 from app.core.sqlalchemy.data_model.user_data_model import UserDataModel
-from app.domain.entity.comment import CommentWithUser
+from app.domain.entity.comment import Comment
 from app.domain.entity.user import User
 from app.domain.value_object.id import Id
 from app.domain.value_object.email import Email
@@ -22,7 +22,7 @@ class CommentQueryService(object):
     def fetch_comments_by_spot_id(
         self,
         spot_id: int
-    ) -> Union[List[CommentWithUser], None]:
+    ) -> Union[List[Comment], None]:
         db_comment = self.__comment_dao.get_comments_by_spot_id(spot_id)
         if db_comment is None:
             return None
@@ -30,9 +30,9 @@ class CommentQueryService(object):
 
     def __create_comment_with_user_entity(
         self,
-        db_comment: CommentWithUserDataModel
-    ) -> CommentWithUser:
-        return CommentWithUser(
+        db_comment: CommentDataModel
+    ) -> Comment:
+        return Comment(
             id=Id(db_comment.id),
             user_id=Id(db_comment.user_id),
             spot_id=Id(db_comment.spot_id),
