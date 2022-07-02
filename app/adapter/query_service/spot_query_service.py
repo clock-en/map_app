@@ -19,9 +19,9 @@ class SpotQueryService(object):
     def fetch_all_spots(self) -> Union[Spot, None]:
         return self.__create_spot_list(self.__spot_dao.get_all_spots())
 
-    def fetch_spot_by_user_id(self, user_id: Id) -> Union[List[Spot], None]:
+    def fetch_spots_by_user_id(self, user_id: Id) -> Union[List[Spot], None]:
         return self.__create_spot_list(
-            self.__spot_dao.get_spot_by_user_id(user_id))
+            self.__spot_dao.get_spots_by_user_id(user_id))
 
     def fetch_spot_by_id(self, id: Id) -> Union[Spot, None]:
         return self.__create_spot_with_comment_entity(

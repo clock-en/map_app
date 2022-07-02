@@ -32,10 +32,12 @@ router = APIRouter(prefix='/api/spots', tags=['spots'])
     '',
     response_model=List[spots_schema.Spot],
     status_code=status.HTTP_201_CREATED,
-    dependencies=[Depends(auth.authorize_user)]
 )
-async def get_spots(user_id: int = None):
-    input = FetchSpotsUsecaseInput(user_id)
+async def get_spots(
+    current_user: users_schema.User = Depends(auth.authorize_user),
+    is_own: bool = None,
+):
+    input = FetchSpotsUsecaseInput(user_id=current_user.id, is_own=is_own)
     usecase = FetchSpotsUsecaseInteractor(input)
     presenter = SpotsIndexPresenter(usecase.handle())
     viewModel = presenter.api()
@@ -83,12 +85,12 @@ async def create_spot(
 async def get_spot(
     id: int = Path(ge=1),
     current_user: users_schema.User = Depends(auth.authorize_user),
-    editable: bool = None
+    is_own: bool = None
 ):
     input = FetchSpotUsecaseInput(
         id=id,
         user_id=current_user.id,
-        editable=editable
+        is_own=is_own
     )
     usecase = FetchSpotUsecaseInteractor(input)
     presenter = SpotsIdPresenter(usecase.handle())

@@ -21,7 +21,7 @@ class FetchSpotsUsecaseInteractor(object):
         return FetchSpotsUsecaseOutput(is_success=True, spots=spots)
 
     def __fetch_spots(self) -> Union[List[Spot], None]:
-        if (self.__input.user_id is not None):
-            return self.__query_service.fetch_spot_by_user_id(
+        if self.__input.is_own:
+            return self.__query_service.fetch_spots_by_user_id(
                 self.__input.user_id)
         return self.__query_service.fetch_all_spots()

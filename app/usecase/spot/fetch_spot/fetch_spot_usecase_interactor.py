@@ -15,7 +15,7 @@ class FetchSpotUsecaseInteractor(object):
 
     def handle(self) -> FetchSpotUsecaseOutput:
         spot = self.__query_service.fetch_spot_by_id(self.__input.id)
-        if (self.__input.editable and
+        if (self.__input.is_own and
                 not spot.user_id.__eq__(self.__input.user_id)):
             return FetchSpotUsecaseOutput(
                 is_success=False,

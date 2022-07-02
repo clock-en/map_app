@@ -18,7 +18,7 @@ class SpotDao(Dao):
             SpotDataModel.id == id.value
         ).first()
 
-    def get_spot_by_user_id(self, user_id: Id):
+    def get_spots_by_user_id(self, user_id: Id):
         return self.db.query(SpotDataModel).filter(
             SpotDataModel.user_id == user_id.value
         ).all()

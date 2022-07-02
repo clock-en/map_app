@@ -7,14 +7,14 @@ from app.domain.value_object.id import Id
 class FetchSpotUsecaseInput(object):
     id: Id
     user_id: Id
-    editable: Union[bool, None]
+    is_own: Union[bool, None]
 
     def __init__(
         self,
         id: int,
         user_id: int,
-        editable: Union[bool, None]
+        is_own: Union[bool, None]
     ) -> None:
         object.__setattr__(self, 'id', Id(id))
         object.__setattr__(self, 'user_id', Id(user_id))
-        object.__setattr__(self, 'editable', editable)
+        object.__setattr__(self, 'is_own', is_own)
