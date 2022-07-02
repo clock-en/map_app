@@ -40,5 +40,5 @@ class CommentsCreateViewModel(object):
             email=user.email.value,
             password=user.password.value,
             created_at=user.created_at.value,
-            updated_at=user.updated_at
+            updated_at=user.updated_at.value
         )
