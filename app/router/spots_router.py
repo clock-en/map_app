@@ -32,10 +32,12 @@ router = APIRouter(prefix='/api/spots', tags=['spots'])
     '',
     response_model=List[spots_schema.Spot],
     status_code=status.HTTP_201_CREATED,
-    dependencies=[Depends(auth.authorize_user)]
 )
-async def get_spots(user_id: int = None):
-    input = FetchSpotsUsecaseInput(user_id)
+async def get_spots(
+    current_user: users_schema.User = Depends(auth.authorize_user),
+    is_own: bool = None,
+):
+    input = FetchSpotsUsecaseInput(user_id=current_user.id, is_own=is_own)
     usecase = FetchSpotsUsecaseInteractor(input)
     presenter = SpotsIndexPresenter(usecase.handle())
     viewModel = presenter.api()
@@ -79,12 +81,17 @@ async def create_spot(
     '/{id}',
     response_model=spots_schema.Spot,
     status_code=status.HTTP_200_OK,
-    dependencies=[Depends(auth.authorize_user)]
 )
 async def get_spot(
     id: int = Path(ge=1),
+    current_user: users_schema.User = Depends(auth.authorize_user),
+    is_own: bool = None
 ):
-    input = FetchSpotUsecaseInput(id)
+    input = FetchSpotUsecaseInput(
+        id=id,
+        user_id=current_user.id,
+        is_own=is_own
+    )
     usecase = FetchSpotUsecaseInteractor(input)
     presenter = SpotsIdPresenter(usecase.handle())
     viewModel = presenter.api()
@@ -92,6 +99,11 @@ async def get_spot(
         if viewModel['error'].type == NotFoundError.TYPE_CODE:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
+                detail=viewModel['error'].message
+            )
+        if viewModel['error'].type == BadRequestError.TYPE_CODE:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
                 detail=viewModel['error'].message
             )
     return viewModel['spot']
