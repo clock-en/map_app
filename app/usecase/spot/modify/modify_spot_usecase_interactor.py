@@ -47,13 +47,13 @@ class ModifySpotUsecaseInteractor(object):
         if db_spot is None:
             return ModifySpotUsecaseOutput(
                 is_success=False,
-                error=BadRequestError('不正な値が送信されています。ページを更新し、操作をやり直してください')
+                error=BadRequestError('不正な値が送信されました。ページを更新し、操作をやり直してください。')
             )
         if not db_spot.updated_at.__eq__(self.__input.updated_at):
             return ModifySpotUsecaseOutput(
                 is_success=False,
                 error=ConflictError(
-                    '対象のユーザー情報はすでに別の操作で変更されています。ページを更新し、操作をやり直してください')
+                    '対象のユーザー情報はすでに別の操作で変更されています。ページを更新し、操作をやり直してください。')
             )
 
         spot = self.__repository.modify(

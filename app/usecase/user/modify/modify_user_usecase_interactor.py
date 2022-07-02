@@ -32,7 +32,7 @@ class ModifyUserUsecaseInteractor(object):
             return ModifyUserUsecaseOutput(
                 is_success=False,
                 error=ConflictError(
-                    '対象のユーザー情報はすでに別の操作で変更されています。ページを更新し、操作をやり直してください')
+                    '対象のユーザー情報はすでに別の操作で変更されています。ページを更新し、操作をやり直してください。')
             )
 
         user = self.__repository.modify(
